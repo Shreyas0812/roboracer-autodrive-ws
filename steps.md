@@ -25,4 +25,9 @@ cd ./AutoDRIVE/ADSS Toolkit/autodrive_ros2
 
 Copy this folfer to the workspace/scr
 
+```bash
+roboracer-ws$ colcon build
+```
+
+
 
