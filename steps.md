@@ -29,5 +29,15 @@ Copy this folfer to the workspace/scr
 roboracer-ws$ colcon build
 ```
 
+Step 4:
 
+Change scripts-dir to scripts_dir and install-scripts to install_scripts for deprecation warning,
+
+
+This is inside 
+
+```
+roboracer-ws/src/autodrive_ros2/autodrive_f1tenth/setup.cfg
+roboracer-ws/src/autodrive_ros2/autodrive_nigel/setup.cfg
+```
 
