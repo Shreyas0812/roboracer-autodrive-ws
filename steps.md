@@ -20,6 +20,9 @@ git clone -b AutoDRIVE-Devkit --single-branch https://github.com/Tinker-Twins/Au
 Step 3:
 
 ```bash
-cd ./AutoDRIVE/ADSS Toolkit
+cd ./AutoDRIVE/ADSS Toolkit/autodrive_ros2
 ```
+
+Copy this folfer to the workspace/scr
+
 
