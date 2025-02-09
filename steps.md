@@ -20,7 +20,7 @@ git clone -b AutoDRIVE-Devkit --single-branch https://github.com/Tinker-Twins/Au
 Step 3:
 
 ```bash
-cd ./AutoDRIVE/ADSS Toolkit/autodrive_ros2
+cd ./AutoDRIVE/ADSS Toolkit/autodrive_ros2/autodrive_f1tenth
 ```
 
 Copy this folfer to the workspace/scr
@@ -37,7 +37,13 @@ Change scripts-dir to scripts_dir and install-scripts to install_scripts for dep
 This is inside 
 
 ```
-roboracer-ws/src/autodrive_ros2/autodrive_f1tenth/setup.cfg
-roboracer-ws/src/autodrive_ros2/autodrive_nigel/setup.cfg
+roboracer-ws/src/autodrive_f1tenth/setup.cfg
+```
+
+
+Step 5:
+
+```bash
+$ pip3 install -r requirements.txt
 ```
 
