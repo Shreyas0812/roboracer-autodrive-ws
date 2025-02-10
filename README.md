@@ -23,6 +23,8 @@ roboracer-ws/
 ### System Requirements
 - ROS 2 (Humble recommended)
 - Python 3.10 (Tested) (Recommended: Python 3.8+)
+- AutoDRIVE Simulator App - Download and install following instructions at [AutoDRIVE Simulator](https://github.com/Tinker-Twins/AutoDRIVE/tree/AutoDRIVE-Simulator)
+
 
 ### Python Packages (requirements.txt is provided)
 
