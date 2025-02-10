@@ -24,9 +24,9 @@ roboracer-ws/
 - ROS 2 (Humble recommended)
 - Python 3.10 (Tested) (Recommended: Python 3.8+)
 
-### Python Packages
+### Python Packages (requirements.txt is provided)
 
-WebSocket Communication: (requirements.txt is provided)
+WebSocket Communication: 
 
 ```bash
 pip3 install eventlet==0.33.3
