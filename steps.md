@@ -104,3 +104,7 @@ ros2 run autodrive_f1tenth teleop_keyboard
 ```
 
 Note: Make sure to Change the mode to autonomous in the GUI
+
+----------------------------------------------------------------------------------------------------
+
+$ ros2 pkg create --build-type ament_python car_control_pub_sub
