@@ -9,6 +9,8 @@ This workspace combines autonomous driving capabilities through two main compone
 - **autodrive_f1tenth**: Integration of AutoDRIVE framework for autonomous driving development
 - **car_control_pub_sub**: Sample ROS 2 nodes demonstrating F1TENTH racing communication patterns
 
+For detailed setup instructions and steps followed during development, please refer to [steps.md](steps.md).
+
 ## Repository Structure
 
 ```bash
