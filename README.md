@@ -96,7 +96,7 @@ ros2 run car_control_pub_sub custom_car_publisher
 ## Attribution
 
 - autodrive_f1tenth package is derived from [AutoDRIVE](https://github.com/Tinker-Twins/AutoDRIVE/tree/AutoDRIVE-Devkit/ADSS%20Toolkit/autodrive_ros2)
-- car_control_pub_sub package is based on F1TENTH Lab implementations at the University of Pennsylvania
+- car_control_pub_sub package is a sample on F1TENTH Lab implementations at the University of Pennsylvania
 
 
 
