@@ -16,12 +16,12 @@ class CustomCarPublisher(Node):
         self.qos_profile = QoSProfile(depth=10)
 
         # Topics 
-        self.throttle_pub_topic = "/autodrive/f1tenth_1/throttle_command" # range: -1 to 1 mapped to -100% to 100%
-        self.steering_pub_topic = "/autodrive/f1tenth_1/steering_command" # range: -1 to 1 mapped to -0.52rad to 0.52rad 
+        self.throttle_pub_topic = "/autodrive/f1tenth_1/throttle_command" # range: -1 to 1 mapped to -100% to 100% (but can go more)
+        self.steering_pub_topic = "/autodrive/f1tenth_1/steering_command" # range: -1 to 1 mapped to -0.52rad to 0.52rad (but can go more)
 
         # Values
-        self.throttle_command_value = 0.20
-        self.steering_command_value = 0.5 
+        self.throttle_command_value = 1.55
+        self.steering_command_value = 1.56
 
         # Creating publishers
 
