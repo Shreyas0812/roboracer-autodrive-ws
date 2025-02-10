@@ -104,7 +104,24 @@ ros2 run autodrive_f1tenth teleop_keyboard
 ```
 
 Note: Make sure to Change the mode to autonomous in the GUI
+----------------------------------------------------------------------------------------------------
+
+
+Check ranges using:
+
+$ ros2 topic echo /autodrive/f1tenth_1/throttle
+
+$ ros2 topic echo /autodrive/f1tenth_1/steering
+
 
 ----------------------------------------------------------------------------------------------------
 
 $ ros2 pkg create --build-type ament_python car_control_pub_sub
+
+If using with both cpp and python, extra step is needed:
+roboracer-ws$ chmod +x src/car_control_pub_sub/car_control_pub_sub/custom_car_publisher.py 
+
+roboracer-ws$ ros2 run car_control_pub_sub custom_car_publisher
+
+----------------------------------------------------------------------------------------------------
+

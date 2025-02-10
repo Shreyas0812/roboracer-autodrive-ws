@@ -20,6 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
+            'custom_car_publisher = car_control_pub_sub.custom_car_publisher:main',
+            'custom_car_subscriber = car_control_pub_sub.custom_car_subscriber:main',
         ],
     },
 )
