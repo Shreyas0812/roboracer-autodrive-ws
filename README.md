@@ -72,7 +72,9 @@ RViz Mode:
 ros2 launch autodrive_f1tenth simulator_bringup_rviz.launch.py
 ```
 
-### Control
+### Control 
+
+Note: Make sure that the mode in the App is "Autonomous" and the connection is on "Connected"
 
 Keyboard Teleoperation:
 
