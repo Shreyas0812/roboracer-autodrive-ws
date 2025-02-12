@@ -3,7 +3,7 @@
 <package format="3">
   <name>wall_follow</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>Lab 3: Wall Follow on AutoDRIVE</description>
   <maintainer email="raorane@seas.upenn.edu">shreyas</maintainer>
   <license>MIT</license>
 
