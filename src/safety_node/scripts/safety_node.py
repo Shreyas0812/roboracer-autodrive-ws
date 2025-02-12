@@ -80,7 +80,7 @@ class SafetyNode(Node):
 
         self.tf2_static_subsciber = self.create_subscription(
             TFMessage,
-            '/tf',
+            '/tf_static',
             self.tf2_static_callback,
             qos_profile_tf_static
         )
@@ -128,6 +128,7 @@ class SafetyNode(Node):
             brake_msg.data = 0.0
             self.throttle_publisher.publish(brake_msg)
 
+    #CHECK: tf2_static_callback
     def tf2_static_callback(self, tf_msg):
         self.get_logger().info("TF Static Callback")
         for transform in tf_msg.transforms:
