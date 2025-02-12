@@ -30,7 +30,8 @@
 
 # ROS 2 module imports
 import rclpy # ROS 2 client library (rcl) for Python (built on rcl C API)
-from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy # Ouality of Service (tune communication between nodes)
+# from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy # Ouality of Service (tune communication between nodes)
+from rclpy.qos import QoSProfile, ReliabilityPolicy, HistoryPolicy # Changing to new QoS API
 from ament_index_python.packages import get_package_share_directory # Access package's shared directory path
 
 # Python mudule imports
@@ -71,9 +72,14 @@ def main():
     # ROS 2 infrastructure
     rclpy.init() # Initialize ROS 2 communication for this context
     autodrive_outgoing_bridge = rclpy.create_node('autodrive_outgoing_bridge') # Create ROS 2 node
-    qos_profile = QoSProfile( # Ouality of Service profile
-        reliability=QoSReliabilityPolicy.RMW_QOS_POLICY_RELIABILITY_RELIABLE, # Reliable (not best effort) communication
-        history=QoSHistoryPolicy.RMW_QOS_POLICY_HISTORY_KEEP_LAST, # Keep/store only up to last N samples
+    # qos_profile = QoSProfile( # Ouality of Service profile
+    #     reliability=QoSReliabilityPolicy.RMW_QOS_POLICY_RELIABILITY_RELIABLE, # Reliable (not best effort) communication
+    #     history=QoSHistoryPolicy.RMW_QOS_POLICY_HISTORY_KEEP_LAST, # Keep/store only up to last N samples
+    #     depth=1 # Queue (buffer) size/depth (only honored if the “history” policy was set to “keep last”)
+    #     )
+    qos_profile = QoSProfile( # Ouality of Service profile using new API
+        reliability=ReliabilityPolicy.RELIABLE, # Reliable (not best effort) communication
+        history=HistoryPolicy.KEEP_LAST, # Keep/store only up to last N samples
         depth=1 # Queue (buffer) size/depth (only honored if the “history” policy was set to “keep last”)
         )
     callbacks = {
