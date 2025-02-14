@@ -98,8 +98,16 @@ Running Custom Subscriber
 ros2 run car_control_pub_sub custom_car_publisher 
 ```
 
+# roboracer-ws-running-nodes
 
-## Attribution
+## wall-follow
+
+```bash
+roboracer-ws$ colcon build --packages-select wall_follow
+roboracer-ws$ ros2 launch wall_follow wall_follow.launch.py 
+```
+
+# Attribution
 
 - autodrive_f1tenth package is derived from [AutoDRIVE](https://github.com/Tinker-Twins/AutoDRIVE/tree/AutoDRIVE-Devkit/ADSS%20Toolkit/autodrive_ros2)
 - car_control_pub_sub package is a sample on F1TENTH Lab implementations at the University of Pennsylvania
