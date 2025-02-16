@@ -43,8 +43,13 @@ class WallFollowNode(Node):
 
 
         # TODO: set PID gains
-        self.declare_parameter('kp', 0.8)
-        self.declare_parameter('kd', 0)
+        # Works with throttle 0.1
+        # self.declare_parameter('kp', 4.0)
+        # self.declare_parameter('kd', 0)
+        # self.declare_parameter('ki', 0.0)
+
+        self.declare_parameter('kp', 2.4)
+        self.declare_parameter('kd', 0.8)
         self.declare_parameter('ki', 0.0)
 
         self.kp = self.get_parameter('kp').value
@@ -217,7 +222,7 @@ class WallFollowNode(Node):
         steering_msg = Float32()
         steering_msg.data = steering_angle 
 
-        throttle = 0.1
+        throttle = 0.2
 
         throttle_msg = Float32()
         throttle_msg.data = throttle 
