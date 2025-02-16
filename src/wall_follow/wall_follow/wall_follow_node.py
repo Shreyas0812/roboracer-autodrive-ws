@@ -9,34 +9,12 @@ from sensor_msgs.msg import LaserScan
 
 import numpy as np
 
-"""
-/autodrive/f1tenth_1/front_camera
-/autodrive/f1tenth_1/imu
-/autodrive/f1tenth_1/ips
-/autodrive/f1tenth_1/left_encoder
-/autodrive/f1tenth_1/lidar
-/autodrive/f1tenth_1/right_encoder
-/autodrive/f1tenth_1/steering
-/autodrive/f1tenth_1/steering_command
-/autodrive/f1tenth_1/throttle
-/autodrive/f1tenth_1/throttle_command
-/clicked_point
-/goal_pose
-/initialpose
-/parameter_events
-/rosout
-/tf
-/tf_static
-
-"""
-
-
 class WallFollowNode(Node):
     def __init__(self):
         super().__init__('wall_follow_node')
         self.get_logger().info('Wall Follow Node')
 
-        self.declare_parameter('desired_dist_from_wall', 0.5)
+        self.declare_parameter('desired_dist_from_wall', 0.4)
 
         # Note: 0 is directly in front of the car, positive is clockwise
         self.declare_parameter('degreeTheta1', np.deg2rad(20)) # Start angle of the LiDAR to be considered
@@ -65,18 +43,19 @@ class WallFollowNode(Node):
 
 
         # TODO: set PID gains
-        self.declare_parameter('kp', 3.5)
-        self.declare_parameter('kd', 1.2)
-        self.declare_parameter('ki', 0.008)
+        self.declare_parameter('kp', 0.8)
+        self.declare_parameter('kd', 0)
+        self.declare_parameter('ki', 0.0)
 
         self.kp = self.get_parameter('kp').value
         self.kd = self.get_parameter('kd').value
         self.ki = self.get_parameter('ki').value
 
-
         # TODO: store history
         # self.integral = 0.0     
-        self.speed = 0.0
+        # self.speed = 0.0
+        self.throttle = 0.0
+        
         self.prev_error = 0.0
         self.error = 0.0
 
@@ -117,7 +96,8 @@ class WallFollowNode(Node):
 
         #TODO:implement
 
-        lookahead_distance = self.speed * 0.8
+        # lookahead_distance = self.speed * 0.8
+        lookahead_distance = 0.8
 
         a = self.get_range(range_data, self.theta1)
         b = self.get_range(range_data, self.theta2)
@@ -145,13 +125,13 @@ class WallFollowNode(Node):
 
         return error
 
-    def pid_control(self, error, velocity):
+    def pid_control(self, error, throttle):
         """
         Based on the calculated error, publish vehicle control
 
         Args:
             error: calculated error
-            velocity: desired velocity
+            throttle: desired throttle
 
         Returns:
             None
@@ -173,17 +153,17 @@ class WallFollowNode(Node):
         # angle = np.clip(angle, -0.8, 0.8)
 
         if np.abs(angle) <= np.deg2rad(10):
-            velocity = 1.0
+            throttle = 1.0
         elif np.abs(angle) <= np.deg2rad(20):
-            velocity = 0.75
+            throttle = 0.75
         else:
-            velocity = 0.5
+            throttle = 0.5
 
         # self.get_logger().info(f"Angle: {angle}", skip_first=True, throttle_duration_sec=1.0)
         # self.get_logger().info(f"error: {error}", skip_first=True, throttle_duration_sec=1.0)
         
         # TODO: fill in drive message and publish
-        self.publish_to_car(angle, velocity)
+        self.publish_to_car(angle, throttle)
 
     def scan_callback(self, msg):
         """
@@ -209,34 +189,38 @@ class WallFollowNode(Node):
         self.error = self.get_error(range_data, self.desired_dist_from_wall)
 
         # TODO: calculate desired car velocity based on error
-        self.pid_control(self.error, self.speed)
+        # self.pid_control(self.error, self.speed)
+
+        # TODO: calculate desired car velocity based on error
+        self.pid_control(self.error, self.throttle)
     
     def throttle_callback(self, msg):
         # Get the throttle value
-        self.speed = msg.data * 4.92 # max speed
-
-    def publish_to_car(self, steering_angle, velocity):
+        # self.speed = msg.data * 4.92 # max speed
+        self.throttle = msg.data        
+    
+    def publish_to_car(self, steering_angle, throttle):
         """
         Publish the steering angle and throttle to the car.
 
         Args:
             steering_angle: Steering angle in radians
-            velocity: Throttle value
+            throttle: Throttle value
         Returns:
             None
         """
 
-        self.get_logger().info(f"Steering angle: {steering_angle}, Throttle: {velocity}", skip_first=True, throttle_duration_sec=1.0)
+        self.get_logger().info(f"Steering angle: {steering_angle}, Throttle: {throttle}", throttle_duration_sec=1.0)
 
-        steering_angle = np.clip(steering_angle, -0.8, 0.8)
-        
-        velocity = 0.15
+        steering_angle = np.clip(steering_angle, -1, 1) # Limit steering angle to [-30, 30] degrees
 
         steering_msg = Float32()
-        steering_msg.data = steering_angle
+        steering_msg.data = steering_angle 
+
+        throttle = 0.1
 
         throttle_msg = Float32()
-        throttle_msg.data = velocity
+        throttle_msg.data = throttle 
 
         self.steering_pub.publish(steering_msg)
         self.throttle_pub.publish(throttle_msg)
