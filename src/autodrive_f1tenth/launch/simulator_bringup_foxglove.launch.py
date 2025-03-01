@@ -26,6 +26,10 @@
 
 from launch import LaunchDescription
 from launch_ros.actions import Node
+from launch.actions import IncludeLaunchDescription
+from launch_xml.launch_description_sources import XMLLaunchDescriptionSource
+from launch_ros.substitutions import FindPackageShare
+import os
 
 def generate_launch_description():
 
@@ -45,5 +49,11 @@ def generate_launch_description():
             emulate_tty=True,
             output='screen',
             parameters=[]
+        ),
+        IncludeLaunchDescription(
+            XMLLaunchDescriptionSource([
+                FindPackageShare('foxglove_bridge'),
+                '/launch/foxglove_bridge_launch.xml'
+            ])
         )
     ])
