@@ -3,11 +3,15 @@
 <package format="3">
   <name>wall_follow_ui_control</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>Wall Follow Using Custom UI</description>
   <maintainer email="raorane@seas.upenn.edu">shreyas</maintainer>
-  <license>TODO: License declaration</license>
+  <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_python</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>rclpy</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
