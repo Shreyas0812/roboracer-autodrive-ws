@@ -15,10 +15,10 @@ class WallFollowUiControlNode(Node):
         super().__init__("wall_follow_ui_control_node")
         self.get_logger().info("wall follow ui control node")
 
-        self.desired_dist_from_wall = 0.4
+        self.desired_dist_from_wall = 0.5
 
         self.theta1 = np.deg2rad(20)
-        self.theta2 = np.deg2rad(70)
+        self.theta2 = np.deg2rad(90)
 
         self.kp = 2.4
         self.kd = 0.8
