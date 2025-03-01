@@ -13,15 +13,15 @@ class WallFollowGetParams(Node):
 
         qos_profile = QoSProfile(depth=10)
 
-        self.wall_follow_ui_control_publisher_ = self.create_publisher(CarControlWallFollow, "wall_follow_ui_control", qos_profile)
+        self.wall_follow_ui_control_publisher_ = self.create_publisher(CarControlWallFollow, "wall_follow_params", qos_profile)
 
         self.wall_follow_ui_control_timer_ = self.create_timer(1.0, self.publish_wall_follow_ui_control)
     
     def publish_wall_follow_ui_control(self):
         wall_follow_ui_control_msg = CarControlWallFollow()
-        wall_follow_ui_control_msg.kp = 0.5
-        wall_follow_ui_control_msg.kd = 0.1
-        wall_follow_ui_control_msg.ki = 0.01
+        wall_follow_ui_control_msg.kp = 2.4
+        wall_follow_ui_control_msg.kd = 0.8
+        wall_follow_ui_control_msg.ki = 0.0
 
         self.wall_follow_ui_control_publisher_.publish(wall_follow_ui_control_msg)
 
