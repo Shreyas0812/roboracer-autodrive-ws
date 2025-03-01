@@ -30,6 +30,7 @@ ament_python_install_package(${PROJECT_NAME})
 
 install(PROGRAMS
   scripts/wall_follow_ui_control_node.py
+  scripts/wall_follow_get_params.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

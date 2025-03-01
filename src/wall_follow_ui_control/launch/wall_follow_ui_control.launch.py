@@ -7,13 +7,12 @@ def generate_launch_description():
             package="wall_follow_ui_control",
             executable="wall_follow_ui_control_node.py",
             name="wall_follow_ui_control_node",
-            output="screen",
-
+            output="screen"
         ),
         Node(
             package="wall_follow_ui_control",
-            executable="wall_follow_ui_control",
-            name="wall_follow_ui_control_node",
-            output="screen",
+            executable="wall_follow_get_params.py",
+            name="wall_follow_get_params",
+            output="screen"
         )
     ])
