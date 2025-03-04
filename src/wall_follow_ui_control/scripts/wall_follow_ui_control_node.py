@@ -24,7 +24,8 @@ class WallFollowUiControlNode(Node):
         self.kd = 0.8
         self.ki = 0.0
 
-        self.throttle = 0.0
+        self.throttle = 0.2
+        self.lookahead_dist = 0.8
 
         self.prev_error = 0.0
         self.error = 0.0
@@ -59,6 +60,13 @@ class WallFollowUiControlNode(Node):
         if self.ki != msg.ki:
             self.ki = msg.ki 
 
+        if self.throttle != msg.throttle:
+            self.throttle = msg.throttle
+        
+        if self.lookahead_dist != msg.lookahead_dist:
+            self.lookahead_dist = msg.lookahead_dist
+
+        
 
 
     def get_range(self, range_data, angle):
@@ -97,14 +105,13 @@ class WallFollowUiControlNode(Node):
 
         #TODO:implement
 
-        # lookahead_distance = self.speed * 0.8
-        lookahead_distance = 0.8
+        # self.lookahead_dist = self.speed * 0.8
 
         a = self.get_range(range_data, self.theta1)
         b = self.get_range(range_data, self.theta2)
 
 
-        self.get_logger().info(f"a: {a}, b: {b}", throttle_duration_sec=1)
+        # self.get_logger().info(f"a: {a}, b: {b}", throttle_duration_sec=1)
 
         theta = self.theta2 - self.theta1
 
@@ -116,7 +123,7 @@ class WallFollowUiControlNode(Node):
 
         dt = b * np.cos(alpha)
 
-        dt1 = dt + lookahead_distance*np.sin(alpha)
+        dt1 = dt + self.lookahead_dist*np.sin(alpha)
 
         # self.get_logger().info(f"dt: {dt}, dt1: {dt1}", throttle_duration_sec=1)
 
@@ -143,8 +150,6 @@ class WallFollowUiControlNode(Node):
 
         steering_msg = Float32()
         steering_msg.data = steering_angle 
-
-        throttle = 0.2
 
         throttle_msg = Float32()
         throttle_msg.data = throttle 
@@ -179,12 +184,14 @@ class WallFollowUiControlNode(Node):
         angle *= -1
         # angle = np.clip(angle, -0.8, 0.8)
 
-        if np.abs(angle) <= np.deg2rad(10):
-            throttle = 1.0
-        elif np.abs(angle) <= np.deg2rad(20):
-            throttle = 0.75
-        else:
-            throttle = 0.5
+        # If throttle is 404, then set throttle based on angle
+        if throttle == 404:
+            if np.abs(angle) <= np.deg2rad(10):
+                throttle = 1.0
+            elif np.abs(angle) <= np.deg2rad(20):
+                throttle = 0.75
+            else:
+                throttle = 0.5
 
         # self.get_logger().info(f"Angle: {angle}", skip_first=True, throttle_duration_sec=1.0)
         # self.get_logger().info(f"error: {error}", skip_first=True, throttle_duration_sec=1.0)

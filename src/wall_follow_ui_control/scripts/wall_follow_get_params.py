@@ -23,6 +23,8 @@ class WallFollowGetParams(Node):
     
     def publish_wall_follow_ui_control(self):
         wall_follow_ui_control_msg = CarControlWallFollow()
+        # wall_follow_ui_control_msg.throttle = 0.2
+        # wall_follow_ui_control_msg.lookahead_dist = 0.8
         # wall_follow_ui_control_msg.kp = 2.4
         # wall_follow_ui_control_msg.kd = 1.0
         # wall_follow_ui_control_msg.ki = 0.0
@@ -33,14 +35,21 @@ class WallFollowGetParams(Node):
         with open(absolute_file_path, 'r') as file:
             config_data = json.load(file)
 
+            if config_data["throttle"] is None:
+                config_data["throttle"] = 404 # Fun: 404 is the HTTP status code for "Not Found"
 
+            wall_follow_ui_control_msg.throttle = float(config_data["throttle"])
+            wall_follow_ui_control_msg.lookahead_dist = float(config_data["lookahead_dist"])
             wall_follow_ui_control_msg.kp = float(config_data["kp"])
             wall_follow_ui_control_msg.kd = float(config_data["kd"])
             wall_follow_ui_control_msg.ki = float(config_data["ki"])
 
+            #Logging: 
+            self.get_logger().info(f'\nthrottle: {config_data["throttle"]}')
+            self.get_logger().info(f'lookahead_dist: {config_data["lookahead_dist"]}')
             self.get_logger().info(f'kp: {config_data["kp"]}')
             self.get_logger().info(f'kd: {config_data["kd"]}')
-            self.get_logger().info(f'ki: {config_data["ki"]}')
+            self.get_logger().info(f'ki: {config_data["ki"]}\n')
 
             self.wall_follow_ui_control_publisher_.publish(wall_follow_ui_control_msg)
 
