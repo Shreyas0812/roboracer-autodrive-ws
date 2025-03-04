@@ -22,7 +22,7 @@ find_package(roboracer_interfaces REQUIRED)
 include_directories(include)
 
 add_executable(wall_follow_ui_control src/wall_follow_ui_control_node.cpp)
-ament_target_dependencies(wall_follow_ui_control rclcpp)
+ament_target_dependencies(wall_follow_ui_control rclcpp ament_index_cpp)
 
 install(TARGETS
   wall_follow_ui_control
@@ -42,6 +42,12 @@ install(PROGRAMS
 install(DIRECTORY
   launch
   DESTINATION share/${PROJECT_NAME}
+)
+
+# Using Config Files
+install(DIRECTORY
+  config/
+  DESTINATION share/${PROJECT_NAME}/config
 )
 
 if(BUILD_TESTING)
