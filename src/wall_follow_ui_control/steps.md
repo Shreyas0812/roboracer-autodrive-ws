@@ -1,7 +1,7 @@
 Step 1 : Creating a new package
 ```bash
 $ cd roboracer_ws/src/
-roboracer_ws/src/$ ros2 pkg create my_cpp_py_pkg --build-type ament_cmake
+roboracer_ws/src/$ ros2 pkg create wall_follow_ui_control_node --build-type ament_cmake
 ```
 
 Step 2: Making package ready for cpp and python nodes
