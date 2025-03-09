@@ -1,9 +1,9 @@
 {
     "throttle": "0.1",
-    "lookahead_dist": "0.8",
+    "lookahead_dist": "1.2",
     "kp": "2.4",
     "kd": "1",
     "ki": "0",
-    "flag_reason": "Latest",
-    "flag_msg": "213123"
+    "flag_reason": "Golden",
+    "flag_msg": "Some message"
 }
