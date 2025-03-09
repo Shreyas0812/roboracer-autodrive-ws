@@ -1,6 +1,6 @@
 **/.vscode/
 
 # Colcon build stuff
-**/build/
-**/install/
-**/log/
+/build/
+/install/
+/log/
