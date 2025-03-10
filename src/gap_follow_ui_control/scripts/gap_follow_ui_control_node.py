@@ -16,29 +16,39 @@ class GapFollowUIControlNode(Node):
         self.get_logger().info("Gap Follow UI Control Node Started")
 
         self.throttle = 0.2
-        self.window_half_size = 5
-        self.disparity_extender = 5
-        self.max_actionable_dist = 2.0
+        self.windowHalf = 5
+        self.disparityExtender = 5
+        self.maxActionableDist = 2.0
 
-        gap_follow_params_sub_topic = "gap_follow_params"
 
         qos_profile = QoSProfile(depth=10)
 
         # Subscriber Topics
+        gap_follow_params_sub_topic = "gap_follow_params"
+        lidar_sub_topic = '/autodrive/f1tenth_1/lidar'
+
         self.gap_follow_params_sub_ = self.create_subscription(CarControlGapFollow, gap_follow_params_sub_topic, self.gap_follow_params_callback, qos_profile)
+        self.lidar_sub_ = self.create_subscription(LaserScan, lidar_sub_topic, self.scan_callback, qos_profile)
+
+        # Publisher topics
+        steering_pub_topic = '/autodrive/f1tenth_1/steering_command'
+        throttle_pub_topic = '/autodrive/f1tenth_1/throttle_command'
+
+        self.throttle_pub = self.create_publisher(Float32, throttle_pub_topic, qos_profile)
+        self.steering_pub = self.create_publisher(Float32, steering_pub_topic, qos_profile)
 
     def gap_follow_params_callback(self, msg):
         if self.throttle != msg.throttle:
             self.throttle = msg.throttle 
 
-        if self.window_half_size != msg.window_half_size:
-            self.window_half_size = msg.window_half_size
+        if self.windowHalf != msg.window_half_size:
+            self.windowHalf = msg.window_half_size
 
-        if self.disparity_extender != msg.disparity_extender:
-            self.disparity_extender = msg.disparity_extender
+        if self.disparityExtender != msg.disparity_extender:
+            self.disparityExtender = msg.disparity_extender
 
-        if self.max_actionable_dist != msg.max_actionable_dist:
-            self.max_actionable_dist = msg.max_actionable_dist
+        if self.maxActionableDist != msg.max_actionable_dist:
+            self.maxActionableDist = msg.max_actionable_dist
 
 
 def main(args=None):
