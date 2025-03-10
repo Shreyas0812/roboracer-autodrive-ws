@@ -16,10 +16,11 @@ class GapFollowUIControlNode(Node):
         self.get_logger().info("Gap Follow UI Control Node Started")
 
         self.throttle = 0.2
-        self.windowHalf = 5
-        self.disparityExtender = 5
+        self.window_half = 40
+        self.disparityExtender = 50
         self.maxActionableDist = 2.0
 
+        self.running_steering_angle = 0.0
 
         qos_profile = QoSProfile(depth=10)
 
@@ -41,8 +42,8 @@ class GapFollowUIControlNode(Node):
         if self.throttle != msg.throttle:
             self.throttle = msg.throttle 
 
-        if self.windowHalf != msg.window_half_size:
-            self.windowHalf = msg.window_half_size
+        if self.window_half != msg.window_half_size:
+            self.window_half = msg.window_half_size
 
         if self.disparityExtender != msg.disparity_extender:
             self.disparityExtender = msg.disparity_extender
@@ -50,40 +51,47 @@ class GapFollowUIControlNode(Node):
         if self.maxActionableDist != msg.max_actionable_dist:
             self.maxActionableDist = msg.max_actionable_dist
 
-    def mutate_ranges(self, ranges, center_index, value):
-        """ Mutate ranges to be a certain value
-        """
-        ranges[center_index-self.windowHalf:center_index+self.windowHalf] = value
+    def get_range(self, range_data, angle):
+        
+        index = int((angle - range_data['angles'][0]) / range_data['angle_increment'])
 
-        return ranges
+        start_index = index - self.window_half
+        end_index = index + self.window_half
+
+        # average of 10 points around the index 
+        return_range = np.average(range_data['ranges'][start_index:end_index])
+
+        return index, return_range
     
-    def preprocess_lidar(self, ranges):
-        """ Preprocess the LiDAR scan array. Expert implementation includes:
-            1.Setting each value to the mean over some window
-            2.Rejecting high values (eg. > 3m)
+    def find_best_point(self, start_i, end_i, range_data):
+        """Start_i & end_i are start and end indicies of max-gap range, respectively
+        Return index of best point in ranges
+	    Naive: Choose the furthest point within ranges and go there
         """
-        proc_ranges = np.array(ranges)
+        # Going to the center of the gap for now
 
-        gaps = []
-        disparities = []
+        slow_turn1 = False
+        slow_turn2 = False
+        slow_turn3 = False
 
-        prev_range = proc_ranges[0]
-        for i in range(self.windowHalf, len(proc_ranges)-self.windowHalf):            
+        running_towards_idx, running_towards_dist = self.get_range(range_data, self.running_steering_angle)
 
-            cur_mean = np.mean(proc_ranges[i-self.windowHalf:i+self.windowHalf+1])
+        center_point_idx = int((start_i + end_i) / 2)
+        
+        diff_in_index = np.abs(center_point_idx - running_towards_idx)
 
-            if cur_mean > self.maxActionableDist:
-                gaps.append(i)
+        if diff_in_index <= 5:
+            slow_turn1 = True
+        elif diff_in_index <= 10:
+            slow_turn2 = True
+        elif diff_in_index <= 15:
+            slow_turn3 = True
 
-            cur_range = proc_ranges[i]
-            if np.abs(cur_range - prev_range) > 2.0:
-                disparities.append(i)
-            else:
-                prev_range = cur_range
+        furthest_point_idx = center_point_idx
 
-        return proc_ranges, gaps, disparities
-    
-    def find_max_gap(self, gaps):
+        return slow_turn1, slow_turn2, slow_turn3, furthest_point_idx
+
+    def find_max_gap(self, free_space_ranges, gaps):
         """ Return the start index & end index of the max gap in free_space_ranges
         """
 
@@ -106,59 +114,81 @@ class GapFollowUIControlNode(Node):
 
         return largest_range_gap
     
-    def find_best_point(self, start_i, end_i, ranges):
-        """Start_i & end_i are start and end indicies of max-gap range, respectively
-        Return index of best point in ranges
-	    Naive: Choose the furthest point within ranges and go there
+    def mutate_ranges(self, ranges, center_index, value):
+        """ Mutate ranges to be a certain value
         """
-        # max_gap_ranges = ranges[start_i:end_i]
+        ranges[center_index-self.window_half:center_index+self.window_half] = value
 
-        # furtherest_point_idx = np.argmax(max_gap_ranges) + start_i
+        return ranges
+    
+    def preprocess_lidar(self, proc_ranges):
+        """ Preprocess the LiDAR scan array. Expert implementation includes:
+            1.Setting each value to the mean over some window
+            2.Rejecting high values (eg. > 3m)
+        """
 
-        # self.get_logger().info(f'furtherest_point_idx: {furtherest_point_idx}', throttle_duration_sec=1.0)
+        gaps = []
+        for i in range(self.window_half, len(proc_ranges)-self.window_half):
+            cur_mean = np.mean(proc_ranges[i-self.window_half:i+self.window_half+1])
+            if cur_mean > self.maxActionableDist:
+                gaps.append(i)
 
+        for index in gaps:
+            proc_ranges = self.mutate_ranges(proc_ranges, index, self.maxActionableDist)
 
-        # Going to the center of the gap for now
-        furtherest_point_idx = int((start_i + end_i) / 2)
-
-        return furtherest_point_idx
+        return proc_ranges, gaps
     
     def lidar_callback(self, data):
         """ Process each LiDAR scan as per the Follow Gap algorithm & publish an AckermannDriveStamped Message
         """
-        ranges = data.ranges
 
-        proc_ranges, gaps, disparities = self.preprocess_lidar(ranges)
+        range_data = {
+            'ranges': np.array(data.ranges),
+            'angles': np.linspace(data.angle_min, data.angle_max, len(data.ranges)),
+            'angle_increment': data.angle_increment
+        }
 
-        for index in gaps:
-            proc_ranges[index-self.windowHalf:index+self.windowHalf] = self.maxActionableDist
+        dead_straight_idx, dead_straight = self.get_range(range_data, 0)
 
-        for index in disparities:
-            proc_ranges[index-self.disparityExtender:index+self.disparityExtender] = 0.0
+        proc_ranges, gaps = self.preprocess_lidar(range_data['ranges'])
 
-        self.get_logger().info(f'gaps: {len(gaps)}', throttle_duration_sec=1.0)
-        self.get_logger().info(f'disp: {len(disparities)}', throttle_duration_sec=1.0)
+        min_dist_idx = np.argmin(proc_ranges)
 
-        gaps = list(set(gaps) - set(disparities))
+        #Decrease perceived distance in the bubble
+        bubble_start = max(0, min_dist_idx - self.disparityExtender)
+        bubble_end = min(len(proc_ranges), min_dist_idx + self.disparityExtender)
 
-        self.get_logger().info(f'gaps: {len(gaps)}', throttle_duration_sec=1.0)
+        proc_ranges[bubble_start:bubble_end] = proc_ranges[bubble_start:bubble_end] - 1.5
 
-        #Find max length gap 
-        start_idx, end_idx = self.find_max_gap(gaps)
+        # remove negative values
+        proc_ranges[proc_ranges < 0] = 0
 
-        ########################################################### THIS CAN BE IMPROVED ###########################################################
-        #Find the best point in the gap
-        best_point = self.find_best_point(start_idx, end_idx, proc_ranges)
+        # Remove the range values which correspond to the gap behind the car
+        start_index = len(range_data['ranges']) // 6     # corresponds to -90 degrees
+        end_index = (len(range_data['ranges']) * 5) // 6 # corresponds to +90 degrees
+        proc_ranges[: start_index] = 0
+        proc_ranges[end_index:] = 0
 
-        self.get_logger().info(f'best_point: {best_point}', throttle_duration_sec=1.0)
+        # Adjusting Gaps
+        gaps = list(set(gaps) - set(range(bubble_start, bubble_end+1)) - set(range(0, start_index)) - set(range(end_index, 1080)))
 
-        ################################################################################################## 100 % sure this is working till this point ###################################################################################################
+        start_idx, end_idx = self.find_max_gap(proc_ranges, gaps)        
 
-        angle = data.angle_min + best_point * data.angle_increment
+        # Smooth turns
+        slow_turn1, slow_turn2, slow_turn3, best_point = self.find_best_point(start_idx, end_idx, range_data)
+
+        angle = range_data["angles"][0] + best_point * range_data["angle_increment"]
         
-        self.get_logger().info(f'angle: {angle}', throttle_duration_sec=1.0)
+        if slow_turn1:
+            angle = angle * 0.3
+        elif slow_turn2:
+            angle = angle * 0.4
+        elif slow_turn3:
+            angle = angle * 0.5
 
         #Publish Drive message
+        self.running_steering_angle = angle
+
         self.publish_to_car(angle, self.throttle)
 
     def publish_to_car(self, steering_angle, throttle):
