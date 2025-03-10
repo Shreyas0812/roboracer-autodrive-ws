@@ -28,7 +28,7 @@ class GapFollowUIControlNode(Node):
         lidar_sub_topic = '/autodrive/f1tenth_1/lidar'
 
         self.gap_follow_params_sub_ = self.create_subscription(CarControlGapFollow, gap_follow_params_sub_topic, self.gap_follow_params_callback, qos_profile)
-        self.lidar_sub_ = self.create_subscription(LaserScan, lidar_sub_topic, self.scan_callback, qos_profile)
+        self.lidar_sub_ = self.create_subscription(LaserScan, lidar_sub_topic, self.lidar_callback, qos_profile)
 
         # Publisher topics
         steering_pub_topic = '/autodrive/f1tenth_1/steering_command'
