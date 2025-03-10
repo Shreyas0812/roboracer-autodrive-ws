@@ -51,6 +51,30 @@ class GapFollowUIControlNode(Node):
             self.maxActionableDist = msg.max_actionable_dist
 
 
+    def publish_to_car(self, steering_angle, throttle):
+        """
+        Publish the steering angle and throttle to the car.
+
+        Args:
+            steering_angle: Steering angle in radians
+            throttle: Throttle value
+        Returns:
+            None
+        """
+
+        self.get_logger().info(f"Steering angle: {steering_angle}, Throttle: {throttle}", throttle_duration_sec=1.0)
+
+        steering_angle = np.clip(steering_angle, -1, 1) # Limit steering angle to [-30, 30] degrees
+
+        steering_msg = Float32()
+        steering_msg.data = steering_angle 
+
+        throttle_msg = Float32()
+        throttle_msg.data = throttle 
+
+        self.steering_pub.publish(steering_msg)
+        self.throttle_pub.publish(throttle_msg)
+    
 def main(args=None):
     rclpy.init(args=args)
     node = GapFollowUIControlNode()
