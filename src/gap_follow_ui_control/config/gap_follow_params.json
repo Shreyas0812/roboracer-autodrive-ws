@@ -1,6 +1,8 @@
 {
-    "throttle": 0.2,
-    "window_half_size": 40,
-    "disparity_extender": 50,
-    "max_actionable_dist": 2.0
+    "throttle": "0.17",
+    "window_half_size": "40",
+    "disparity_extender": "50",
+    "max_actionable_dist": "2.5",
+    "flag_reason": "Latest",
+    "flag_msg": ""
 }
