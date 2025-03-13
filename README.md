@@ -107,6 +107,42 @@ roboracer-ws$ colcon build --packages-select wall_follow
 roboracer-ws$ ros2 launch wall_follow wall_follow.launch.py 
 ```
 
+## wall-follow
+
+```bash
+roboracer-ws$ colcon build --packages-select wall_follow
+roboracer-ws$ ros2 launch wall_follow wall_follow.launch.py 
+```
+
+## wall-follow-ui-control
+
+```bash
+roboracer-ws$ colcon build
+roboracer-ws$ source install/setup.bash
+roboracer-ws$ ros2 launch wall_follow_ui_control wall_follow_ui_control.launch.py 
+```
+
+In another terminal, from the roboracer-autodrive-ui: (https://github.com/Shreyas0812/roboracer-autodrive-ui)
+Note: Make sure gradio is installed
+```bash
+roboracer-autodrive-ui$ gradio wall_follow_params_set.py 
+```
+
+
+## gap-follow-ui-control
+
+```bash
+roboracer-ws$ colcon build
+roboracer-ws$ source install/setup.bash
+roboracer-ws$ ros2 launch gap_follow_ui_control gap_follow_ui_control.launch.py 
+```
+
+In another terminal, from the roboracer-autodrive-ui: (https://github.com/Shreyas0812/roboracer-autodrive-ui)
+Note: Make sure gradio is installed
+```bash
+roboracer-autodrive-ui$ gradio gap_follow_params_set.py 
+```
+
 # Attribution
 
 - autodrive_f1tenth package is derived from [AutoDRIVE](https://github.com/Tinker-Twins/AutoDRIVE/tree/AutoDRIVE-Devkit/ADSS%20Toolkit/autodrive_ros2)
