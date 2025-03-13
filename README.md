@@ -108,12 +108,6 @@ ros2 run car_control_pub_sub custom_car_publisher
 
 # roboracer-ws-running-nodes
 
-## wall-follow
-
-```bash
-roboracer-ws$ colcon build --packages-select wall_follow
-roboracer-ws$ ros2 launch wall_follow wall_follow.launch.py 
-```
 
 ## wall-follow
 
