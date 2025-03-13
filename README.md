@@ -76,6 +76,14 @@ RViz Mode:
 ros2 launch autodrive_f1tenth simulator_bringup_rviz.launch.py
 ```
 
+Foxglove Mode: (custom addition)
+
+Requirement: foxglove should be installed
+
+```bash
+ros2 launch autodrive_f1tenth simulator_bringup_foxglove.launch.py
+```
+
 ### Control 
 
 Note: Make sure that the mode in the App is "Autonomous" and the connection is on "Connected"
