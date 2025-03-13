@@ -1,0 +1,4 @@
+float64 throttle
+int64 window_half_size
+int64 disparity_extender
+float64 max_actionable_dist
