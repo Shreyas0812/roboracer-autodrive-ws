@@ -1,0 +1,308 @@
+{
+  "configById": {
+    "NodePlayground!117ifev": {
+      "selectedNodeId": "e77be2bd-1a79-4b6a-befd-fb6894b9551a",
+      "autoFormatOnSave": true
+    },
+    "RawMessages!2oq0nby": {
+      "diffEnabled": false,
+      "diffMethod": "custom",
+      "diffTopicPath": "",
+      "showFullMessageForDiff": false,
+      "topicPath": "/foxglove_script/disp_dist",
+      "fontSize": 12
+    },
+    "GlobalVariableSliderPanel!3u6si0s": {
+      "sliderProps": {
+        "min": 0,
+        "max": 2,
+        "step": 0.1
+      },
+      "globalVariableName": "reference_line_value",
+      "foxglovePanelTitle": "Reference Value"
+    },
+    "Plot!pzg1r2": {
+      "paths": [
+        {
+          "timestampMethod": "publishTime",
+          "value": "/foxglove_script/disp_dist.cur_dist",
+          "enabled": true,
+          "color": "#4e98e2",
+          "label": "Current Minimum Distance",
+          "showLine": true
+        },
+        {
+          "timestampMethod": "publishTime",
+          "value": "/foxglove_script/disp_dist.required_dist",
+          "enabled": true,
+          "color": "#f5774d",
+          "label": "Reference Value"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/foxglove_script/disp_dist.total_width",
+          "enabled": false,
+          "color": "#f7df71",
+          "label": "Total Width"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/foxglove_script/disp_dist.left_wall_dist",
+          "enabled": false,
+          "color": "#e73a1b",
+          "label": "Distance to Left Wall"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/foxglove_script/disp_dist.right_wall_dist",
+          "enabled": false,
+          "color": "#5cd6a9",
+          "label": "Distance to Right Wall"
+        }
+      ],
+      "showXAxisLabels": true,
+      "showYAxisLabels": true,
+      "showLegend": true,
+      "legendDisplay": "floating",
+      "showPlotValuesInLegend": false,
+      "isSynced": true,
+      "xAxisVal": "timestamp",
+      "sidebarDimension": 240,
+      "xAxisLabel": "Time",
+      "minYValue": 0,
+      "maxYValue": 4,
+      "minXValue": 0
+    },
+    "Plot!2pepdbr": {
+      "paths": [
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/autodrive/f1tenth_1/steering.data",
+          "enabled": true,
+          "color": "#4e98e2",
+          "label": "Steering Angle"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "0",
+          "enabled": true,
+          "color": "#f5774d",
+          "lineSize": 2,
+          "label": ""
+        }
+      ],
+      "showXAxisLabels": true,
+      "showYAxisLabels": true,
+      "showLegend": true,
+      "legendDisplay": "floating",
+      "showPlotValuesInLegend": false,
+      "isSynced": true,
+      "xAxisVal": "timestamp",
+      "sidebarDimension": 240,
+      "xAxisLabel": "Time",
+      "minYValue": -0.6,
+      "maxYValue": 0.6,
+      "minXValue": 0
+    },
+    "Image!3mnp456": {
+      "cameraState": {
+        "distance": 20,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 45,
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "scene": {
+        "enableStats": true,
+        "ignoreColladaUpAxis": false,
+        "meshUpAxis": "y_up"
+      },
+      "transforms": {},
+      "topics": {},
+      "layers": {},
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "imageMode": {
+        "imageTopic": "/autodrive/f1tenth_1/front_camera"
+      }
+    },
+    "3D!4eof2b": {
+      "cameraState": {
+        "distance": 17.1474999999992,
+        "perspective": true,
+        "phi": 59.99999999999944,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          6.938893903907228e-18,
+          -0.02390965051538385,
+          -9.385090490992205e-19
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 45,
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "scene": {
+        "enableStats": false
+      },
+      "transforms": {
+        "frame:f1tenth_1": {
+          "visible": true
+        },
+        "frame:front_camera": {
+          "visible": false
+        },
+        "frame:front_left_wheel": {
+          "visible": false
+        },
+        "frame:front_right_wheel": {
+          "visible": false
+        },
+        "frame:imu": {
+          "visible": false
+        },
+        "frame:ips": {
+          "visible": false
+        },
+        "frame:left_encoder": {
+          "visible": false
+        },
+        "frame:lidar": {
+          "visible": false
+        },
+        "frame:rear_left_wheel": {
+          "visible": false
+        },
+        "frame:rear_right_wheel": {
+          "visible": false
+        },
+        "frame:right_encoder": {
+          "visible": false
+        }
+      },
+      "topics": {},
+      "layers": {
+        "grid": {
+          "visible": true,
+          "frameLocked": true,
+          "label": "Grid",
+          "instanceId": "99b3dea2-d2eb-49f6-ac23-37758943bb2b",
+          "layerId": "foxglove.Grid",
+          "size": 10,
+          "divisions": 10,
+          "lineWidth": 1,
+          "color": "#248eff",
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "imageMode": {}
+    }
+  },
+  "globalVariables": {
+    "throttle_value": 0.3,
+    "steering_value": -0.36,
+    "reference_line_value": 0.7
+  },
+  "userNodes": {
+    "323711eb-59e1-4178-9618-a3cbb842272b": {
+      "sourceCode": "import { Input, Message } from \"./types\";\n\ntype Output = {\n  data: number;\n};\ntype GlobalVariables = { throttle_value: number };\n\nexport const inputs = [\"/autodrive/f1tenth_1/throttle\"];\nexport const output = \"/foxglove_script/throttle_command_bridge\";\n\nexport default function script(\n  event: any,\n  globalVars: GlobalVariables,\n): Output {\n  //log(globalVars.throttle_value);\n  return {\n    data: globalVars.throttle_value,\n  };\n}\n",
+      "name": "publish_throttle"
+    },
+    "2eb31fc9-f9f2-4c96-9026-a755a5f6442a": {
+      "sourceCode": "import { Input, Message } from \"./types\";\n\ntype Output = {\n  data: number;\n};\ntype GlobalVariables = { steering_value: number };\n\nexport const inputs = [\"/autodrive/f1tenth_1/steering\"];\nexport const output = \"/foxglove_script/steering_command_bridge\";\n\nexport default function script(\n  event: any,\n  globalVars: GlobalVariables,\n): Output {\n  //log(globalVars.throttle_value);\n  return {\n    data: globalVars.steering_value,\n  };\n}\n",
+      "name": "publish_steering"
+    },
+    "e77be2bd-1a79-4b6a-befd-fb6894b9551a": {
+      "sourceCode": "import { Input, Message } from \"./types\";\n\ninterface Output {\n  cur_dist: number;\n  required_dist: number;\n  total_width: number;\n  left_wall_dist: number;\n  right_wall_dist: number;\n}\n\ninterface GlobalVariables {\n  reference_line_value: number;\n}\n\nexport const inputs = [\"/autodrive/f1tenth_1/lidar\"];\nexport const output = \"/foxglove_script/disp_dist\";\n\nexport default function script(\n  event: any,\n  globalVars: GlobalVariables,\n): Output {\n  const ranges = event.message.ranges;\n\n  const angle_min = event.message.angle_min;\n  const angle_max = event.message.angle_max;\n  const angle_increment = event.message.angle_increment;\n\n  // Averaging lidar measurement over a span of angles\n  const getAverageRange = (centerAngle: number, spanWidth: number) => {\n    const start_angle = centerAngle - spanWidth / 2;\n    const end_angle = centerAngle + spanWidth / 2;\n\n    const start_index = Math.round((start_angle - angle_min) / angle_increment);\n    const end_index = Math.round((end_angle - angle_min) / angle_increment);\n\n    let sum = 0;\n    let count = 0;\n\n    for (let i = start_index; i <= end_index; i++) {\n      if (\n        i >= 0 &&\n        i < ranges.length &&\n        ranges[i] &&\n        ranges[i] < event.message.range_max\n      ) {\n        sum += ranges[i];\n        count++;\n      }\n    }\n\n    return count > 0 ? sum / count : 0;\n  };\n\n  const left_wall_dist = getAverageRange(-Math.PI / 2, Math.PI / 7);\n  const right_wall_dist = getAverageRange(Math.PI / 2, Math.PI / 7);\n\n  const total_width = left_wall_dist + right_wall_dist;\n\n  const min_range = Math.min(...ranges);\n\n  const reference_line_value = globalVars.reference_line_value || 0;\n\n  return {\n    cur_dist: min_range,\n    required_dist: reference_line_value,\n    total_width: total_width,\n    left_wall_dist: left_wall_dist,\n    right_wall_dist: right_wall_dist,\n  };\n}\n",
+      "name": "publish_min_dist"
+    }
+  },
+  "playbackConfig": {
+    "speed": 1
+  },
+  "layout": {
+    "direction": "row",
+    "first": {
+      "first": {
+        "first": "NodePlayground!117ifev",
+        "second": "RawMessages!2oq0nby",
+        "direction": "row",
+        "splitPercentage": 77.67176931292273
+      },
+      "second": "GlobalVariableSliderPanel!3u6si0s",
+      "direction": "column",
+      "splitPercentage": 42.23194748358862
+    },
+    "second": {
+      "first": {
+        "first": "Plot!pzg1r2",
+        "second": "Plot!2pepdbr",
+        "direction": "column"
+      },
+      "second": {
+        "first": "Image!3mnp456",
+        "second": "3D!4eof2b",
+        "direction": "column",
+        "splitPercentage": 26.171529619805483
+      },
+      "direction": "row",
+      "splitPercentage": 60.02855103497502
+    },
+    "splitPercentage": 30.77753779697624
+  }
+}

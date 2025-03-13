@@ -1,0 +1,304 @@
+{
+  "configById": {
+    "NodePlayground!2lex2g6": {
+      "selectedNodeId": "323711eb-59e1-4178-9618-a3cbb842272b",
+      "autoFormatOnSave": true,
+      "foxglovePanelTitle": "Publish Throttle"
+    },
+    "NodePlayground!ocxk9": {
+      "selectedNodeId": "2eb31fc9-f9f2-4c96-9026-a755a5f6442a",
+      "autoFormatOnSave": true,
+      "foxglovePanelTitle": "Publish Steering"
+    },
+    "GlobalVariableSliderPanel!4ik454j": {
+      "sliderProps": {
+        "min": -1,
+        "max": 1,
+        "step": 0.01
+      },
+      "globalVariableName": "throttle_value",
+      "foxglovePanelTitle": "throttle_value"
+    },
+    "RawMessages!275m98i": {
+      "diffEnabled": false,
+      "diffMethod": "custom",
+      "diffTopicPath": "",
+      "showFullMessageForDiff": false,
+      "topicPath": "/foxglove_script/throttle_command_bridge",
+      "fontSize": 12
+    },
+    "Publish!1md2iko": {
+      "buttonText": "Publish",
+      "buttonTooltip": "",
+      "advancedView": true,
+      "value": "{\n  \"data\": 0.3\n}",
+      "topicName": "/autodrive/f1tenth_1/throttle_command",
+      "datatype": "std_msgs/msg/Float32"
+    },
+    "Plot!3iew46y": {
+      "paths": [
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/autodrive/f1tenth_1/throttle.data",
+          "enabled": true,
+          "color": "#4e98e2",
+          "label": "Throttle"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/autodrive/f1tenth_1/throttle_command.data",
+          "enabled": true,
+          "color": "#f5774d",
+          "label": "Throttle_command",
+          "showLine": true
+        }
+      ],
+      "showXAxisLabels": true,
+      "showYAxisLabels": true,
+      "showLegend": true,
+      "legendDisplay": "floating",
+      "showPlotValuesInLegend": false,
+      "isSynced": true,
+      "xAxisVal": "timestamp",
+      "sidebarDimension": 240,
+      "xAxisLabel": "Time"
+    },
+    "GlobalVariableSliderPanel!2gmud9l": {
+      "sliderProps": {
+        "min": -1,
+        "max": 1,
+        "step": 0.01
+      },
+      "globalVariableName": "steering_value",
+      "foxglovePanelTitle": "steering_value"
+    },
+    "RawMessages!2jsscmt": {
+      "diffEnabled": false,
+      "diffMethod": "custom",
+      "diffTopicPath": "",
+      "showFullMessageForDiff": false,
+      "topicPath": "/foxglove_script/steering_command_bridge",
+      "fontSize": 12
+    },
+    "Publish!25ozorm": {
+      "buttonText": "Publish",
+      "buttonTooltip": "",
+      "advancedView": true,
+      "value": "{\n  \"data\": -1\n}",
+      "topicName": "/autodrive/f1tenth_1/steering_command",
+      "datatype": "std_msgs/msg/Float32"
+    },
+    "Plot!4ew83lf": {
+      "paths": [
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/autodrive/f1tenth_1/steering.data",
+          "enabled": true,
+          "color": "#4e98e2",
+          "label": "Steering"
+        },
+        {
+          "timestampMethod": "receiveTime",
+          "value": "/autodrive/f1tenth_1/steering_command.data",
+          "enabled": true,
+          "color": "#f5774d",
+          "label": "Steering_command"
+        }
+      ],
+      "showXAxisLabels": true,
+      "showYAxisLabels": true,
+      "showLegend": true,
+      "legendDisplay": "floating",
+      "showPlotValuesInLegend": false,
+      "isSynced": true,
+      "xAxisVal": "timestamp",
+      "sidebarDimension": 240,
+      "xAxisLabel": "Time"
+    },
+    "Image!3mnp456": {
+      "cameraState": {
+        "distance": 20,
+        "perspective": true,
+        "phi": 60,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 45,
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "scene": {
+        "enableStats": true,
+        "ignoreColladaUpAxis": false,
+        "meshUpAxis": "y_up"
+      },
+      "transforms": {},
+      "topics": {},
+      "layers": {},
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "imageMode": {
+        "imageTopic": "/autodrive/f1tenth_1/front_camera"
+      }
+    },
+    "3D!4eof2b": {
+      "cameraState": {
+        "distance": 27.20748283999603,
+        "perspective": true,
+        "phi": 59.99999999999993,
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "thetaOffset": 44.99999999999998,
+        "fovy": 45,
+        "near": 0.5,
+        "far": 5000
+      },
+      "followMode": "follow-pose",
+      "scene": {},
+      "transforms": {},
+      "topics": {},
+      "layers": {
+        "grid": {
+          "visible": true,
+          "frameLocked": true,
+          "label": "Grid",
+          "instanceId": "99b3dea2-d2eb-49f6-ac23-37758943bb2b",
+          "layerId": "foxglove.Grid",
+          "size": 10,
+          "divisions": 10,
+          "lineWidth": 1,
+          "color": "#248eff",
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "publish": {
+        "type": "point",
+        "poseTopic": "/move_base_simple/goal",
+        "pointTopic": "/clicked_point",
+        "poseEstimateTopic": "/initialpose",
+        "poseEstimateXDeviation": 0.5,
+        "poseEstimateYDeviation": 0.5,
+        "poseEstimateThetaDeviation": 0.26179939
+      },
+      "imageMode": {}
+    }
+  },
+  "globalVariables": {
+    "throttle_value": 0.3,
+    "steering_value": -0.36
+  },
+  "userNodes": {
+    "323711eb-59e1-4178-9618-a3cbb842272b": {
+      "sourceCode": "import { Input, Message } from \"./types\";\n\ntype Output = {\n  data: number;\n};\ntype GlobalVariables = { throttle_value: number };\n\nexport const inputs = [\"/autodrive/f1tenth_1/throttle\"];\nexport const output = \"/foxglove_script/throttle_command_bridge\";\n\nexport default function script(\n  event: any,\n  globalVars: GlobalVariables,\n): Output {\n  //log(globalVars.throttle_value);\n  return {\n    data: globalVars.throttle_value,\n  };\n}\n",
+      "name": "publish_throttle"
+    },
+    "2eb31fc9-f9f2-4c96-9026-a755a5f6442a": {
+      "sourceCode": "import { Input, Message } from \"./types\";\n\ntype Output = {\n  data: number;\n};\ntype GlobalVariables = { steering_value: number };\n\nexport const inputs = [\"/autodrive/f1tenth_1/steering\"];\nexport const output = \"/foxglove_script/steering_command_bridge\";\n\nexport default function script(\n  event: any,\n  globalVars: GlobalVariables,\n): Output {\n  //log(globalVars.throttle_value);\n  return {\n    data: globalVars.steering_value,\n  };\n}\n",
+      "name": "publish_steering"
+    }
+  },
+  "playbackConfig": {
+    "speed": 1
+  },
+  "layout": {
+    "first": {
+      "direction": "row",
+      "first": {
+        "first": "NodePlayground!2lex2g6",
+        "second": "NodePlayground!ocxk9",
+        "direction": "column",
+        "splitPercentage": 51.5473032714412
+      },
+      "second": {
+        "direction": "row",
+        "first": {
+          "first": {
+            "first": "GlobalVariableSliderPanel!4ik454j",
+            "second": {
+              "first": "RawMessages!275m98i",
+              "second": "Publish!1md2iko",
+              "direction": "column",
+              "splitPercentage": 34.22053231939165
+            },
+            "direction": "column",
+            "splitPercentage": 34.57711442786071
+          },
+          "second": "Plot!3iew46y",
+          "direction": "column",
+          "splitPercentage": 51.5473032714412
+        },
+        "second": {
+          "first": "GlobalVariableSliderPanel!2gmud9l",
+          "second": {
+            "first": "RawMessages!2jsscmt",
+            "second": {
+              "first": "Publish!25ozorm",
+              "second": "Plot!4ew83lf",
+              "direction": "column",
+              "splitPercentage": 31.53942428035044
+            },
+            "direction": "column",
+            "splitPercentage": 14.362272240085744
+          },
+          "direction": "column",
+          "splitPercentage": 17.50663129973475
+        },
+        "splitPercentage": 49.36863244474052
+      },
+      "splitPercentage": 27.86675732318855
+    },
+    "second": {
+      "first": "Image!3mnp456",
+      "second": "3D!4eof2b",
+      "direction": "column",
+      "splitPercentage": 26.171529619805483
+    },
+    "direction": "row",
+    "splitPercentage": 78.22190558326146
+  }
+}
