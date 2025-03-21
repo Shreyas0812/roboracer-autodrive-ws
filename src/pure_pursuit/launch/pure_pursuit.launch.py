@@ -15,6 +15,12 @@ def generate_launch_description():
             name='pure_pursuit_node',
             output='screen'
         ),
+        Node(
+            package='pure_pursuit',
+            executable='pure_pursuit_get_params.py',
+            name='pure_pursuit_get_params_node',
+            output='screen'
+        ),
         # Node(
         #     package='pure_pursuit',
         #     executable='pure_pursuit_node',

@@ -10,6 +10,7 @@ from visualization_msgs.msg import Marker, MarkerArray
 from std_msgs.msg import Header, ColorRGBA, Float32
 from geometry_msgs.msg import Pose, Quaternion, Vector3, Point
 from sensor_msgs.msg import Imu
+from roboracer_interfaces.msg import CarControlPurePursuit
 
 import csv
 import numpy as np
@@ -24,11 +25,11 @@ class PurePursuitNode(Node):
         # Tunable Parameters
         self.lookahead_distance = 1.2
         self.kp = 2.0
-        self.wheelbase = 0.36  # Wheelbase of the vehicle in meters
         self.target_throttle = 0.15  # Target velocity in m/s
-        self.waypoint_divider = 12 # Number of waypoints to divide the path into
         
         # Fixed Parameters
+        self.num_waypoints = 100 # Number of waypoints 
+        self.wheelbase = 0.36  # Wheelbase of the vehicle in meters
         self.waypoint_file_name = "/config/waypoints.csv"
         self.orientation_file_name = "/config/orientations.csv"
 
@@ -64,6 +65,8 @@ class PurePursuitNode(Node):
         qos_profile = QoSProfile(depth=10)
 
         # Topics
+        pure_pursuit_params_topic = "/pure_pursuit_params"
+
         ips_topic = "/autodrive/f1tenth_1/ips"
         imu_topic = "/autodrive/f1tenth_1/imu"
 
@@ -77,6 +80,9 @@ class PurePursuitNode(Node):
 
         self.throttle_pub = self.create_publisher(Float32, throttle_pub_topic, qos_profile)
         self.steering_pub = self.create_publisher(Float32, steering_pub_topic, qos_profile)
+
+        # UI Control
+        self.pure_pursuit_params_subscriber = self.create_subscription(CarControlPurePursuit, pure_pursuit_params_topic, self.pure_pursuit_params_callback, qos_profile)
 
         # Visualization
         self.waypoint_marker_publisher = self.create_publisher(MarkerArray, visualization_topic, qos_profile)
@@ -124,7 +130,7 @@ class PurePursuitNode(Node):
         cs_y = CubicSpline(t, y)
 
         # Generate new waypoints
-        t_new = np.linspace(0, t[-1], num=len(waypoints)//self.waypoint_divider)  # 100 points for smoothness
+        t_new = np.linspace(0, t[-1], num=self.num_waypoints)  # 100 points for smoothness
         x_new = cs_x(t_new)
         y_new = cs_y(t_new)
         waypoints = np.column_stack((x_new, y_new))
@@ -160,6 +166,17 @@ class PurePursuitNode(Node):
             
             self.waypoint_marker_publisher.publish(marker_array)
 
+    def pure_pursuit_params_callback(self, msg):
+        if self.lookahead_distance != msg.lookahead_distance:
+            self.lookahead_distance = msg.lookahead_distance
+
+        if self.kp != msg.kp:
+            self.kp = msg.kp
+
+        if self.target_throttle != msg.throttle:
+            self.target_throttle = msg.throttle
+
+        self.get_logger().info(f"Lookahead distance: {self.lookahead_distance}, Kp: {self.kp}, Target Throttle: {self.target_throttle}")
 
     def ips_callback(self, data):
         self.pos_x = data.x
@@ -241,7 +258,7 @@ class PurePursuitNode(Node):
         return waypoints_ego[idx]
 
     def publish_drive_msg(self, steering_angle):
-        # self.get_logger().info(f"Steering Angle: {steering_angle}")
+
 
         steering_angle = np.clip(steering_angle, -1, 1)
 
@@ -251,6 +268,8 @@ class PurePursuitNode(Node):
 
         throttle_multiplier = 1.0 - 0.5 * np.abs(steering_angle)
         throttle = self.target_throttle * throttle_multiplier
+
+        self.get_logger().info(f"Steering angle: {steering_angle}, Throttle: {throttle}", throttle_duration_sec=1.0)
 
         throttle_msg = Float32()
         throttle_msg.data = throttle
