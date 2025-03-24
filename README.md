@@ -146,6 +146,20 @@ Note: Make sure gradio is installed
 roboracer-autodrive-ui$ gradio gap_follow_params_set.py 
 ```
 
+## pure-pursuit
+
+```bash
+roboracer-ws$ colcon build
+roboracer-ws$ source install/setup.bash
+roboracer-ws$ ros2 launch pure_pursuit pure_pursuit.launch.py 
+```
+
+In another terminal, from the roboracer-autodrive-ui: (https://github.com/Shreyas0812/roboracer-autodrive-ui)
+Note: Make sure gradio is installed
+```bash
+roboracer-autodrive-ui$ gradio pure_pursuit_params_set.py
+```
+
 # Attribution
 
 - autodrive_f1tenth package is derived from [AutoDRIVE](https://github.com/Tinker-Twins/AutoDRIVE/tree/AutoDRIVE-Devkit/ADSS%20Toolkit/autodrive_ros2)
