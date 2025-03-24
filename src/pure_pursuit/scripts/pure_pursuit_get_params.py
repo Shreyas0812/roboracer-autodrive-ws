@@ -32,6 +32,7 @@ class PurePursuitGetParamsNode(Node):
         pure_pursuit_params_msg = CarControlPurePursuit()
         # pure_pursuit_params_msg.lookahead_distance = 1.2
         # pure_pursuit_params_msg.kp = 2.0
+        # pure_pursuit_params_msg.kv = 0.5
         # pure_pursuit_params_msg.throttle = 0.15
 
         package_share_dir = get_package_share_directory("pure_pursuit")
@@ -42,6 +43,7 @@ class PurePursuitGetParamsNode(Node):
 
             pure_pursuit_params_msg.lookahead_distance = float(config_data["lookahead_distance"])
             pure_pursuit_params_msg.kp = float(config_data["kp"])
+            pure_pursuit_params_msg.kv = float(config_data["kv"])
             pure_pursuit_params_msg.throttle = float(config_data["throttle"])
 
             self.pure_pursuit_params_publisher.publish(pure_pursuit_params_msg)

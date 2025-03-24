@@ -25,6 +25,7 @@ class PurePursuitNode(Node):
         # Tunable Parameters
         self.lookahead_distance = 1.2
         self.kp = 2.0
+        self.kv = 0.5
         self.target_throttle = 0.15  # Target velocity in m/s
         
         # Fixed Parameters
@@ -173,6 +174,9 @@ class PurePursuitNode(Node):
         if self.kp != msg.kp:
             self.kp = msg.kp
 
+        if self.kv != msg.kv:
+            self.kv = msg.kv
+
         if self.target_throttle != msg.throttle:
             self.target_throttle = msg.throttle
 
@@ -266,7 +270,7 @@ class PurePursuitNode(Node):
         steering_msg.data = steering_angle
 
 
-        throttle_multiplier = 1.0 - 0.5 * np.abs(steering_angle)
+        throttle_multiplier = 1.0 - self.kv * np.abs(steering_angle)
         throttle = self.target_throttle * throttle_multiplier
 
         self.get_logger().info(f"Steering angle: {steering_angle}, Throttle: {throttle}", throttle_duration_sec=1.0)
