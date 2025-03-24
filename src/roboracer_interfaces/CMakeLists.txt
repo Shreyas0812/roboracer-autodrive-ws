@@ -15,6 +15,7 @@ find_package(rosidl_default_generators REQUIRED)
 rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/CarControlWallFollow.msg"
   "msg/CarControlGapFollow.msg"
+  "msg/CarControlPurePursuit.msg"
 )
 
 ament_export_dependencies(rosidl_default_runtime)
