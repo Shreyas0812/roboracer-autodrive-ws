@@ -15,10 +15,10 @@ def generate_launch_description():
             name='simple_map_node',
             output='screen'
         ),
-        Node(
-            package='simple_map',
-            executable='simple_map_node',
-            name='simple_map_node',
-            output='screen'
-        ),
+        # Node(
+        #     package='simple_map',
+        #     executable='simple_map_node',
+        #     name='simple_map_node',
+        #     output='screen'
+        # ),
     ])
