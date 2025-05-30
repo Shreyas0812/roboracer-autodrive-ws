@@ -5,3 +5,5 @@
 ```bash
 roboracer-ws/src$ ros2 pkg create simple_map --build-type ament_cmake --license MIT
 ```
+
+Create a file structure which looks like the one creted with this commit.
