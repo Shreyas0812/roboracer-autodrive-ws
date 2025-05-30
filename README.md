@@ -76,6 +76,14 @@ RViz Mode:
 ros2 launch autodrive_f1tenth simulator_bringup_rviz.launch.py
 ```
 
+Foxglove Mode: (custom addition)
+
+Requirement: foxglove should be installed
+
+```bash
+ros2 launch autodrive_f1tenth simulator_bringup_foxglove.launch.py
+```
+
 ### Control 
 
 Note: Make sure that the mode in the App is "Autonomous" and the connection is on "Connected"
@@ -100,11 +108,56 @@ ros2 run car_control_pub_sub custom_car_publisher
 
 # roboracer-ws-running-nodes
 
+
 ## wall-follow
 
 ```bash
 roboracer-ws$ colcon build --packages-select wall_follow
 roboracer-ws$ ros2 launch wall_follow wall_follow.launch.py 
+```
+
+## wall-follow-ui-control
+
+```bash
+roboracer-ws$ colcon build
+roboracer-ws$ source install/setup.bash
+roboracer-ws$ ros2 launch wall_follow_ui_control wall_follow_ui_control.launch.py 
+```
+
+In another terminal, from the roboracer-autodrive-ui: (https://github.com/Shreyas0812/roboracer-autodrive-ui)
+
+Note: Make sure gradio is installed
+```bash
+roboracer-autodrive-ui$ gradio wall_follow_params_set.py 
+```
+
+
+## gap-follow-ui-control
+
+```bash
+roboracer-ws$ colcon build
+roboracer-ws$ source install/setup.bash
+roboracer-ws$ ros2 launch gap_follow_ui_control gap_follow_ui_control.launch.py 
+```
+
+In another terminal, from the roboracer-autodrive-ui: (https://github.com/Shreyas0812/roboracer-autodrive-ui)
+Note: Make sure gradio is installed
+```bash
+roboracer-autodrive-ui$ gradio gap_follow_params_set.py 
+```
+
+## pure-pursuit
+
+```bash
+roboracer-ws$ colcon build
+roboracer-ws$ source install/setup.bash
+roboracer-ws$ ros2 launch pure_pursuit pure_pursuit.launch.py 
+```
+
+In another terminal, from the roboracer-autodrive-ui: (https://github.com/Shreyas0812/roboracer-autodrive-ui)
+Note: Make sure gradio is installed
+```bash
+roboracer-autodrive-ui$ gradio pure_pursuit_params_set.py
 ```
 
 # Attribution
