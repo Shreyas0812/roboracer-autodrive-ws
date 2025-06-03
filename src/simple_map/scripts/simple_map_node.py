@@ -2,6 +2,8 @@
 
 import numpy as np
 from transforms3d.euler import quat2euler
+import yaml
+from PIL import Image
 
 import rclpy
 from rclpy.node import Node
@@ -10,6 +12,8 @@ from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSDurabilityPolicy
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import Imu, LaserScan
 from nav_msgs.msg import OccupancyGrid
+
+from std_srvs.srv import Empty
 
 from simple_map.utils import get_grid_coordinates, get_world_coordinates, update_grid_with_ray
 
@@ -24,12 +28,12 @@ class SimpleMapNode(Node):
 
         self.declare_parameter("map_topic", "/map")
 
-        self.declare_parameter('map_height', 100)
-        self.declare_parameter('map_width', 100)
-        self.declare_parameter('map_resolution', 0.1)
-        self.declare_parameter('map_origin', (0.0, 0.0))
+        self.declare_parameter('map_height', 2000)
+        self.declare_parameter('map_width', 2000)
+        self.declare_parameter('map_resolution', 0.01)
+        self.declare_parameter('map_origin', (-10.0, -10.0))
 
-        self.declare_parameter('expand_occ_size', 2)
+        self.declare_parameter('expand_occ_size', 3) # Minimum size of the area to expand occupancy around the endpoint
 
         # Subscribe to topics
         ips_topic = self.get_parameter('ips_topic').get_parameter_value().string_value
@@ -48,11 +52,7 @@ class SimpleMapNode(Node):
         self.expand_occ_size = self.get_parameter('expand_occ_size').get_parameter_value().integer_value
 
         # Default Occupancy Grid
-        self.occupancy_grid = np.array(
-            np.zeros((self.map_height, self.map_width), dtype=np.int8),
-            dtype=np.int8
-        )
-
+        self.occupancy_grid = np.full((self.map_height, self.map_width), -1, dtype=np.int8)
 
         # QoS profile for subscribers
         qos_profile_sub = QoSProfile(depth=10)

@@ -98,8 +98,8 @@ def update_grid_with_ray(
             y += sy
 
     # Mark occupied area around endpoint
-    for dx in range(-area_size, area_size + 1):
-        for dy in range(-area_size, area_size + 1):
+    for dx in range(-area_size, area_size):
+        for dy in range(-area_size, area_size):
             new_x = end_x + dx
             new_y = end_y + dy
             if 0 <= new_x < map_width and 0 <= new_y < map_height:
