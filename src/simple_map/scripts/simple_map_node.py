@@ -35,6 +35,9 @@ class SimpleMapNode(Node):
 
         self.declare_parameter('expand_occ_size', 3) # Minimum size of the area to expand occupancy around the endpoint
 
+        self.declare_parameter('map_name', 'simple_map')
+        self.declare_parameter('map_folder', 'maps')
+
         # Subscribe to topics
         ips_topic = self.get_parameter('ips_topic').get_parameter_value().string_value
         imu_topic = self.get_parameter('imu_topic').get_parameter_value().string_value
@@ -50,6 +53,9 @@ class SimpleMapNode(Node):
         self.map_origin = self.get_parameter('map_origin').get_parameter_value().double_array_value
 
         self.expand_occ_size = self.get_parameter('expand_occ_size').get_parameter_value().integer_value
+
+        self.map_name = self.get_parameter('map_name').get_parameter_value().string_value
+        self.map_folder = self.get_parameter('map_folder').get_parameter_value().string_value
 
         # Default Occupancy Grid
         self.occupancy_grid = np.full((self.map_height, self.map_width), -1, dtype=np.int8)
@@ -72,8 +78,46 @@ class SimpleMapNode(Node):
         # Publisher for map
         self.map_publisher = self.create_publisher(OccupancyGrid, map_topic, qos_profile_pub)
 
-        
+        # Service to save the map
+        # Save the map by calling the service: ros2 service call /save_map std_srvs/srv/Empty
+        self.save_map_service = self.create_service(Empty, '/save_map', self.save_map_callback)
 
+    def save_map_callback(self, request, response):
+        # Save the occupancy grid to a file
+        self.get_logger().info("Saving map...")
+        map_path = f"{self.map_folder}/{self.map_name}"
+        self.save_map_to_file(map_path)
+        return response
+
+    def save_map_to_file(self, filename_prefix):
+        # Convert OccupancyGrid to a PGM format
+
+        pgm_grid = np.zeros_like(self.occupancy_grid, dtype=np.uint8)
+        pgm_grid[self.occupancy_grid == -1] = 205  # Unknown cells
+        pgm_grid[self.occupancy_grid == 0] = 255   # Free cells
+        pgm_grid[self.occupancy_grid == 100] = 0    # Occupied cells
+
+        # Flip the grid vertically to match the PGM format
+        pgm_grid = np.flipud(pgm_grid)
+
+        # Save PGM image
+        img = Image.fromarray(pgm_grid, mode='L')
+        img.save(f"{filename_prefix}.pgm")
+
+        # Save YAML file
+        metadata = {
+            'image': f"{filename_prefix}.pgm",
+            'resolution': float(self.map_resolution),
+            'origin': [float(self.map_origin[0]), float(self.map_origin[1]), 0.0],
+            'negate': 0,
+            'occupied_thresh': 0.65,
+            'free_thresh': 0.196
+        }
+
+        with open(f"{filename_prefix}.yaml", 'w') as yaml_file:
+            yaml.dump(metadata, yaml_file, default_flow_style=False)
+
+        
     def ips_callback(self, msg):
         # self.get_logger().info(f"Received IPS data: {msg.x}, {msg.y}, {msg.z}", throttle_duration_sec=1.0)
         self.cur_pos = np.array([msg.x, msg.y, msg.z])
