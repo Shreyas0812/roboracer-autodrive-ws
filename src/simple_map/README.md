@@ -14,9 +14,9 @@ utils.py has some helper function, main update for map and generation map inside
 
 ### Mapping -- creates pgm and yaml files the way SLAM toolbox creates
 
-To create the map: 
+To create the map independently:
 ```bash
-roboracer-ws$ ros2 launch simple_map simple_map.launch.py 
+roboracer-ws$ ros2 launch simple_map simple_map.launch.py launch_waypoint_logger:=false
 ```
 
 To Save the map:
@@ -37,8 +37,9 @@ This saves a map called simple_map to maps folder under roboracer-ws
 roboracer-ws$ ros2 launch pure_pursuit pure_pursuit.launch.py 
 ```
 
+TO Log Waypoints without map:
 ```bash
-TODO: # Command to log waypoints to be added here 
+roboracer-ws$ ros2 launch simple_map simple_map.launch.py launch_simple_map:=false
 ```
 
 #### 2. Centerline -- Calculated using LiDAR and IMU and IPS Values -- Used as Reference Trajectory in https://github.com/TUMFTM/global_racetrajectory_optimization
