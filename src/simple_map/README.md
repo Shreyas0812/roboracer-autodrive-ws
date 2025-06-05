@@ -25,3 +25,24 @@ roboracer-ws$ ros2 service call /save_map std_srvs/srv/Empty
 ```
 
 This saves a map called simple_map to maps folder under roboracer-ws
+
+
+### Waypoint Logging
+
+#### 1. Simple Logging of the waypoints (points car travels while pure pursuit is running)
+
+##### Side Note: To run pure pursuit:
+
+```bash
+roboracer-ws$ ros2 launch pure_pursuit pure_pursuit.launch.py 
+```
+
+```bash
+TODO: # Command to log waypoints to be added here 
+```
+
+#### 2. Centerline -- Calculated using LiDAR and IMU and IPS Values -- Used as Reference Trajectory in https://github.com/TUMFTM/global_racetrajectory_optimization
+
+```bash
+TODO: # Command to calculate the centerline to be added here
+```
