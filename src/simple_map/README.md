@@ -12,6 +12,8 @@ Update CMakeLists.txt and package.xml
 
 utils.py has some helper function, main update for map and generation map inside simple_map.launch.py
 
+### Mapping -- creates pgm and yaml files the way SLAM toolbox creates
+
 To create the map: 
 ```bash
 roboracer-ws$ ros2 launch simple_map simple_map.launch.py 
@@ -22,4 +24,4 @@ To Save the map:
 roboracer-ws$ ros2 service call /save_map std_srvs/srv/Empty
 ```
 
-This saves a map called simple_map to maps folder
+This saves a map called simple_map to maps folder under roboracer-ws
