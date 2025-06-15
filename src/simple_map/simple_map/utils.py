@@ -1,4 +1,5 @@
 import numpy as np
+import csv
 
 def get_grid_coordinates(x, y, map_origin, map_resolution):
         """
@@ -106,3 +107,20 @@ def update_grid_with_ray(
                 grid[new_y, new_x] = 100  # Occupied cell
 
     return grid
+
+def load_waypoints(filepath):
+    """
+    Load waypoints from a CSV file.
+    Args:
+        filepath (str): Path to the CSV file.
+    Returns:
+        list of tuples: List of (x, y) waypoints.
+    """
+    waypoints = []
+    with open(filepath, 'r') as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            x = float(row[0])
+            y = float(row[1])
+            waypoints.append((x, y))
+    return waypoints    

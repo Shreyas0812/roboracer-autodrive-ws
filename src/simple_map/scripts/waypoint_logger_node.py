@@ -16,9 +16,11 @@ class WaypointLoggerNode(Node):
 
         self.declare_parameter('ips_topic', '/autodrive/f1tenth_1/ips')
         self.declare_parameter('scan_topic', '/autodrive/f1tenth_1/lidar')
+        self.declare_parameter('lap_count_topic', '/autodrive/f1tenth_1/lap_count')
 
         ips_topic = self.get_parameter('ips_topic').get_parameter_value().string_value
         scan_topic = self.get_parameter('scan_topic').get_parameter_value().string_value
+        lap_count_topic = self.get_parameter('lap_count_topic').get_parameter_value().string_value
 
         # TODO: Change this later for dynamic file path
         wp_filepath = '/home/shreyas/Documents/Roboraacer/roboracer-ws/src/simple_map/config/waypoints.csv'    

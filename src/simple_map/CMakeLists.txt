@@ -46,6 +46,7 @@ ament_python_install_package(${PROJECT_NAME})
 install(PROGRAMS
   scripts/simple_map_node.py
   scripts/waypoint_logger_node.py
+  scripts/visualise_node.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
