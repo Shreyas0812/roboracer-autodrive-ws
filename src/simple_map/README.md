@@ -27,9 +27,11 @@ roboracer-ws$ ros2 service call /save_map std_srvs/srv/Empty
 This saves a map called simple_map to maps folder under roboracer-ws
 
 
-### Waypoint Logging
+### Waypoint Saving
 
-#### 1. Simple Logging of the waypoints (points car travels while pure pursuit is running)
+NOTE: The files inside config inside the project act as placeholders, the true files will be inside include folder after colcon build, the saved waypoints will be present there, not inside the config folder here. 
+
+#### 1. Simple Saving of the waypoints (points car travels while pure pursuit is running)
 
 ##### Side Note: To run pure pursuit:
 
@@ -37,21 +39,24 @@ This saves a map called simple_map to maps folder under roboracer-ws
 roboracer-ws$ ros2 launch pure_pursuit pure_pursuit.launch.py 
 ```
 
-To Log Waypoints without map:
+#### 2. Centerline -- Calculated using LiDAR and IMU and IPS Values -- Used as Reference Trajectory in https://github.com/TUMFTM/global_racetrajectory_optimization
+
+
+To Save Waypoints along with CenterLine Waypoints without map:
 ```bash
 roboracer-ws$ ros2 launch simple_map simple_map.launch.py launch_simple_map:=false
 ```
 
-TO Visualize the saved waypoints:
+To Visualize the saved waypoints: 
 ```bash
 roboracer-ws$ ros2 launch simple_map visualise.launch.py 
 ```
 
+Note: Topics Published to: <br> 
+/visualization/waypoints <br>
+/visualization/centerline_waypoints
 
-#### 2. Centerline -- Calculated using LiDAR and IMU and IPS Values -- Used as Reference Trajectory in https://github.com/TUMFTM/global_racetrajectory_optimization
 
-```bash
-TODO: # Command to calculate the centerline to be added here
-```
 
-###### NOTE: The files inside config inside the project act as placeholders, the true files will be inside include folder after colcon build, the saved waypoints will be present there, not inside the config folder here. 
+
+
