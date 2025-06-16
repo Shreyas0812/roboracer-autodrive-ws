@@ -10,6 +10,8 @@ from rclpy.qos import QoSProfile
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import Imu, LaserScan
 
+from ament_index_python.packages import get_package_share_directory
+
 class WaypointLoggerNode(Node):
     def __init__(self):
         super().__init__("waypoint_logger_node")
@@ -28,12 +30,14 @@ class WaypointLoggerNode(Node):
         
         self.window_size = self.get_parameter('window_size').get_parameter_value().integer_value
 
+        package_share_directory = get_package_share_directory('simple_map')
+
         # TODO: Change this later for dynamic file path
-        wp_filepath = '/home/shreyas/Documents/Roboraacer/roboracer-ws/src/simple_map/config/waypoints.csv'    
+        wp_filepath = f'{package_share_directory}/config/waypoints.csv'
         self.wp_file = open(wp_filepath, 'w')
         self.get_logger().info(f"Waypoints will be saved to: {wp_filepath}")
 
-        centerline_filepath = '/home/shreyas/Documents/Roboraacer/roboracer-ws/src/simple_map/config/centerline_waypoints.csv'
+        centerline_filepath = f'{package_share_directory}/config/centerline_waypoints.csv'
         self.centerline_file = open(centerline_filepath, 'w')
         self.get_logger().info(f"Centerline waypoints will be saved to: {centerline_filepath}")
 
@@ -62,15 +66,15 @@ class WaypointLoggerNode(Node):
                                     ])[2]
         
     def scan_callback(self, msg):
-        self.get_logger().info(f"Received LaserScan data: {len(msg.ranges)} ranges")
+        # self.get_logger().info(f"Received LaserScan data: {len(msg.ranges)} ranges")
 
         centerline_point = self.calculate_centerline_point(msg)
 
-        self.get_logger().info(f"Calculated centerline point: {centerline_point}")
+        # self.get_logger().info(f"Calculated centerline point: {centerline_point}")
 
         if centerline_point is not None:
             self.centerline_file.write(f"{centerline_point[0]}, {centerline_point[1]}\n")
-            self.get_logger().info(f"Centerline point saved: {centerline_point}")
+            # self.get_logger().info(f"Centerline point saved: {centerline_point}")
 
     def calculate_centerline_point(self, scan_msg):
 
@@ -81,16 +85,16 @@ class WaypointLoggerNode(Node):
         neg_90_index = self.angle_to_index(-np.pi/2, scan_msg.angle_min, scan_msg.angle_max, scan_msg.angle_increment, len(ranges))
         left_avg_range = self.average_around_index(ranges, neg_90_index, self.window_size)
 
-        self.get_logger().info(f"Left avg range: {left_avg_range}")
+        # self.get_logger().info(f"Left avg range: {left_avg_range}")
 
         # Index when angle is +pi/2
         pos_90_index = self.angle_to_index(np.pi/2, scan_msg.angle_min, scan_msg.angle_max, scan_msg.angle_increment, len(ranges))
         right_avg_range = self.average_around_index(ranges, pos_90_index, self.window_size)
 
-        self.get_logger().info(f"Right avg range: {right_avg_range}")
+        # self.get_logger().info(f"Right avg range: {right_avg_range}")
 
         if not hasattr(self, 'cur_pos') or not hasattr(self, 'cur_yaw'):
-            self.get_logger().warn("Current position or yaw not set yet. Waiting for pose data...")
+            self.get_logger().warn("Current position or yaw not set yet. Waiting for pose data...", throttle_duration_sec=2.0)
             return None
         
         left_point = self.get_point_at_angle_distance(self.cur_pos, self.cur_yaw, -np.pi/2, left_avg_range)

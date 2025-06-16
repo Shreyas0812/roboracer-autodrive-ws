@@ -56,19 +56,13 @@ class VisualiseNode(Node):
 
     def timer_callback(self):
         """Timer callback to continuously visualize waypoints"""
-        self.get_logger().info("Timer callback triggered - visualizing waypoints")
-
-        # log self.waypoints and self.centerline_waypoints lengths
-        self.get_logger().info(f"Number of waypoints: {len(self.waypoints)}")
-        self.get_logger().info(f"Number of centerline waypoints: {len(self.centerline_waypoints)}")
-        
         self.visualize_waypoints()
         self.visualize_centerline_waypoints()
 
     def visualize_waypoints(self):
         """Visualize regular waypoints as yellow spheres"""
         if len(self.waypoints) == 0:
-            self.get_logger().warn("No waypoints to visualize")
+            self.get_logger().warn("No waypoints to visualize", throttle_duration_sec=2.0)
             return
 
         marker_array = MarkerArray()
@@ -95,12 +89,12 @@ class VisualiseNode(Node):
             marker_array.markers.append(marker)
 
         self.waypoint_marker_publisher.publish(marker_array)
-        self.get_logger().info(f"Visualized {len(self.waypoints)} waypoints")
+        self.get_logger().info(f"Visualized {len(self.waypoints)} waypoints", throttle_duration_sec=2.0)
 
     def visualize_centerline_waypoints(self):
         """Visualize centerline waypoints as green spheres"""
         if len(self.centerline_waypoints) == 0:
-            self.get_logger().warn("No centerline waypoints to visualize")
+            self.get_logger().warn("No centerline waypoints to visualize", throttle_duration_sec=2.0)
             return
 
         marker_array = MarkerArray()
@@ -127,7 +121,7 @@ class VisualiseNode(Node):
             marker_array.markers.append(marker)
 
         self.centerline_marker_publisher.publish(marker_array)
-        self.get_logger().info(f"Visualized {len(self.centerline_waypoints)} centerline waypoints")
+        self.get_logger().info(f"Visualized {len(self.centerline_waypoints)} centerline waypoints", throttle_duration_sec=2.0)
 
 def main(args=None):
     rclpy.init(args=args)

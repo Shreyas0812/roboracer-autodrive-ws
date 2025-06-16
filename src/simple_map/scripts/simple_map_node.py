@@ -135,7 +135,7 @@ class SimpleMapNode(Node):
         # self.get_logger().info(f"Received LaserScan data: {msg.ranges}", throttle_duration_sec=1.0)
         
         if not hasattr(self, 'cur_pos') or not hasattr(self, 'cur_yaw'):
-            self.get_logger().warn("Current position or yaw not set yet. Waiting for pose data...")
+            self.get_logger().warn("Current position or yaw not set yet. Waiting for pose data...", throttle_duration_sec=2.0)
             return
         
         scan_data = np.array(scan_msg.ranges)
