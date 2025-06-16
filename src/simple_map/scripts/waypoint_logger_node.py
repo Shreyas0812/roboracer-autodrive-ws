@@ -32,7 +32,6 @@ class WaypointLoggerNode(Node):
 
         package_share_directory = get_package_share_directory('simple_map')
 
-        # TODO: Change this later for dynamic file path
         wp_filepath = f'{package_share_directory}/config/waypoints.csv'
         self.wp_file = open(wp_filepath, 'w')
         self.get_logger().info(f"Waypoints will be saved to: {wp_filepath}")
