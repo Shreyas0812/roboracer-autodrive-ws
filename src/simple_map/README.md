@@ -47,3 +47,5 @@ roboracer-ws$ ros2 launch simple_map simple_map.launch.py launch_simple_map:=fal
 ```bash
 TODO: # Command to calculate the centerline to be added here
 ```
+
+###### NOTE: The files inside config inside the project act as placeholders, the true files will be inside include folder after colcon build, the saved waypoints will be present there, not inside the config folder here. 
