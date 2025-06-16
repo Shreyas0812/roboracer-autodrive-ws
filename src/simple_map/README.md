@@ -37,10 +37,16 @@ This saves a map called simple_map to maps folder under roboracer-ws
 roboracer-ws$ ros2 launch pure_pursuit pure_pursuit.launch.py 
 ```
 
-TO Log Waypoints without map:
+To Log Waypoints without map:
 ```bash
 roboracer-ws$ ros2 launch simple_map simple_map.launch.py launch_simple_map:=false
 ```
+
+TO Visualize the saved waypoints:
+```bash
+roboracer-ws$ ros2 launch simple_map visualise.launch.py 
+```
+
 
 #### 2. Centerline -- Calculated using LiDAR and IMU and IPS Values -- Used as Reference Trajectory in https://github.com/TUMFTM/global_racetrajectory_optimization
 
