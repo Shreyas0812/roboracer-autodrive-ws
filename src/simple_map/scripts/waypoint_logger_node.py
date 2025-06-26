@@ -11,6 +11,8 @@ from geometry_msgs.msg import Point
 from sensor_msgs.msg import Imu, LaserScan
 from std_msgs.msg import Int32
 
+from std_srvs.srv import Empty
+
 from ament_index_python.packages import get_package_share_directory
 
 class WaypointLoggerNode(Node):
@@ -24,12 +26,16 @@ class WaypointLoggerNode(Node):
         self.declare_parameter('lap_count_topic', '/autodrive/f1tenth_1/lap_count')
         self.declare_parameter('window_size', 20)
 
+        self.declare_parameter('reset_wp_logging_service', 'reset_waypoint_logging')
+
         ips_topic = self.get_parameter('ips_topic').get_parameter_value().string_value
         imu_topic = self.get_parameter('imu_topic').get_parameter_value().string_value
         scan_topic = self.get_parameter('scan_topic').get_parameter_value().string_value
         lap_count_topic = self.get_parameter('lap_count_topic').get_parameter_value().string_value
         
         self.window_size = self.get_parameter('window_size').get_parameter_value().integer_value
+
+        reset_wp_logging_service = self.get_parameter('reset_wp_logging_service').get_parameter_value().string_value
 
         package_share_directory = get_package_share_directory('simple_map')
 
@@ -53,6 +59,9 @@ class WaypointLoggerNode(Node):
         self.imu_subscriber = self.create_subscription(Imu, imu_topic, self.imu_callback, qos_profile_sub)
         self.scan_subscriber = self.create_subscription(LaserScan, scan_topic, self.scan_callback, qos_profile_sub)
         self.lap_count_subscriber = self.create_subscription(Int32, lap_count_topic, self.lap_count_callback, qos_profile_sub)
+
+        # reset service to start/stop saving waypoints
+        self.reset_service = self.create_service(Empty, reset_wp_logging_service, self.reset_lap_count_callback)
 
     def ips_callback(self, msg):
         # self.get_logger().info(f"Received IPS data: {msg}")
@@ -95,6 +104,17 @@ class WaypointLoggerNode(Node):
                 # self.lap_change_count = 0
 
         self.previous_lap = cur_lap    
+
+    # ros2 service call /reset_waypoint_logging std_srvs/srv/Empty
+    def reset_lap_count_callback(self, request, response):
+        """Reset lap count and waypoint saving state."""
+        self.get_logger().info("Resetting lap count and waypoint saving state.")
+        self.stop_saving_waypoints()
+        self.previous_lap = None
+        self.lap_change_count = 0
+        self.is_saving_wp = False
+        return response
+
     ######################################################################################################################################################
 
     def start_saving_waypoints(self):
