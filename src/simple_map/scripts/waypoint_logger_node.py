@@ -9,6 +9,7 @@ from rclpy.qos import QoSProfile
 
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import Imu, LaserScan
+from std_msgs.msg import Int32
 
 from ament_index_python.packages import get_package_share_directory
 
@@ -21,7 +22,7 @@ class WaypointLoggerNode(Node):
         self.declare_parameter('imu_topic', '/autodrive/f1tenth_1/imu')
         self.declare_parameter('scan_topic', '/autodrive/f1tenth_1/lidar')
         self.declare_parameter('lap_count_topic', '/autodrive/f1tenth_1/lap_count')
-        self.declare_parameter('window_size', 5)
+        self.declare_parameter('window_size', 20)
 
         ips_topic = self.get_parameter('ips_topic').get_parameter_value().string_value
         imu_topic = self.get_parameter('imu_topic').get_parameter_value().string_value
@@ -32,13 +33,17 @@ class WaypointLoggerNode(Node):
 
         package_share_directory = get_package_share_directory('simple_map')
 
-        wp_filepath = f'{package_share_directory}/config/waypoints.csv'
-        self.wp_file = open(wp_filepath, 'w')
-        self.get_logger().info(f"Waypoints will be saved to: {wp_filepath}")
+        self.wp_filepath = f'{package_share_directory}/config/waypoints.csv'
+        self.centerline_filepath = f'{package_share_directory}/config/centerline_waypoints.csv'
 
-        centerline_filepath = f'{package_share_directory}/config/centerline_waypoints.csv'
-        self.centerline_file = open(centerline_filepath, 'w')
-        self.get_logger().info(f"Centerline waypoints will be saved to: {centerline_filepath}")
+        # file handling
+        self.wp_file = None
+        self.centerline_file = None
+
+        # lap state
+        self.previous_lap = None
+        self.is_saving_wp = False
+        self.lap_change_count = 0
 
         # QoS profile for subscribers
         qos_profile_sub = QoSProfile(depth=10)
@@ -47,11 +52,13 @@ class WaypointLoggerNode(Node):
         self.ips_subscriber = self.create_subscription(Point, ips_topic, self.ips_callback, qos_profile_sub)
         self.imu_subscriber = self.create_subscription(Imu, imu_topic, self.imu_callback, qos_profile_sub)
         self.scan_subscriber = self.create_subscription(LaserScan, scan_topic, self.scan_callback, qos_profile_sub)
-        # self.lap_count_subscriber = self.create_subscription(Int32, lap_count_topic, self.lap_count_callback, qos_profile_sub)
+        self.lap_count_subscriber = self.create_subscription(Int32, lap_count_topic, self.lap_count_callback, qos_profile_sub)
 
     def ips_callback(self, msg):
         # self.get_logger().info(f"Received IPS data: {msg}")
-        self.wp_file.write(f"{msg.x}, {msg.y}\n")
+
+        if self.is_saving_wp and self.wp_file:
+            self.wp_file.write(f"{msg.x}, {msg.y}\n")
 
         self.cur_pos = (msg.x, msg.y)
 
@@ -66,14 +73,49 @@ class WaypointLoggerNode(Node):
         
     def scan_callback(self, msg):
         # self.get_logger().info(f"Received LaserScan data: {len(msg.ranges)} ranges")
+        if self.is_saving_wp:
+            centerline_point = self.calculate_centerline_point(msg)
+            # self.get_logger().info(f"Calculated centerline point: {centerline_point}")
 
-        centerline_point = self.calculate_centerline_point(msg)
+            if centerline_point and self.centerline_file:
+                self.centerline_file.write(f"{centerline_point[0]}, {centerline_point[1]}\n")
 
-        # self.get_logger().info(f"Calculated centerline point: {centerline_point}")
+    def lap_count_callback(self, msg):
+        # self.get_logger().info(f"Received lap count: {msg.data}")
+        cur_lap = msg.data
 
-        if centerline_point is not None:
-            self.centerline_file.write(f"{centerline_point[0]}, {centerline_point[1]}\n")
-            # self.get_logger().info(f"Centerline point saved: {centerline_point}")
+        if self.previous_lap is not None and cur_lap != self.previous_lap:
+            self.lap_change_count += 1
+            self.get_logger().info(f"Lap changed from {self.previous_lap} to {cur_lap}. Lap change count: {self.lap_change_count}")
+
+            if self.lap_change_count == 1:
+                self.start_saving_waypoints()
+            elif self.lap_change_count == 2:
+                self.stop_saving_waypoints()
+                # self.lap_change_count = 0
+
+        self.previous_lap = cur_lap    
+    ######################################################################################################################################################
+
+    def start_saving_waypoints(self):
+        """Start saving waypoints to file."""
+        if not self.is_saving_wp:
+            self.wp_file = open(self.wp_filepath, 'w')
+            self.centerline_file = open(self.centerline_filepath, 'w')
+            self.is_saving_wp = True
+            self.get_logger().info(f"Started saving waypoints to {self.wp_filepath} and \ncenterline waypoints to {self.centerline_filepath}.")
+
+    def stop_saving_waypoints(self):
+        """Stop saving waypoints to file."""
+        if self.is_saving_wp:
+            if self.wp_file:
+                self.wp_file.close()
+                self.wp_file = None
+            if self.centerline_file:
+                self.centerline_file.close()
+                self.centerline_file = None
+            self.is_saving_wp = False
+            self.get_logger().info("Stopped saving waypoints.")
 
     def calculate_centerline_point(self, scan_msg):
 
