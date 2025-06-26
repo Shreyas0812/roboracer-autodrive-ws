@@ -2,6 +2,7 @@
 
 import numpy as np
 from transforms3d.euler import quat2euler
+from scipy.interpolate import CubicSpline
 
 import rclpy
 from rclpy.node import Node
@@ -46,6 +47,10 @@ class WaypointLoggerNode(Node):
         self.wp_file = None
         self.centerline_file = None
 
+        # waypoint buffer
+        self.waypoint_buffer = []
+        self.centerline_buffer = []
+
         # lap state
         self.previous_lap = None
         self.is_saving_wp = False
@@ -66,8 +71,8 @@ class WaypointLoggerNode(Node):
     def ips_callback(self, msg):
         # self.get_logger().info(f"Received IPS data: {msg}")
 
-        if self.is_saving_wp and self.wp_file:
-            self.wp_file.write(f"{msg.x}, {msg.y}\n")
+        if self.is_saving_wp:
+            self.waypoint_buffer.append((msg.x, msg.y))
 
         self.cur_pos = (msg.x, msg.y)
 
@@ -86,8 +91,8 @@ class WaypointLoggerNode(Node):
             centerline_point = self.calculate_centerline_point(msg)
             # self.get_logger().info(f"Calculated centerline point: {centerline_point}")
 
-            if centerline_point and self.centerline_file:
-                self.centerline_file.write(f"{centerline_point[0]}, {centerline_point[1]}\n")
+            if centerline_point:
+                self.centerline_buffer.append(centerline_point)
 
     def lap_count_callback(self, msg):
         # self.get_logger().info(f"Received lap count: {msg.data}")
@@ -120,22 +125,53 @@ class WaypointLoggerNode(Node):
     def start_saving_waypoints(self):
         """Start saving waypoints to file."""
         if not self.is_saving_wp:
-            self.wp_file = open(self.wp_filepath, 'w')
-            self.centerline_file = open(self.centerline_filepath, 'w')
+            self.waypoint_buffer = []
+            self.centerline_buffer = []
             self.is_saving_wp = True
-            self.get_logger().info(f"Started saving waypoints to {self.wp_filepath} and \ncenterline waypoints to {self.centerline_filepath}.")
+            self.get_logger().info(f"Started buffering waypoints and centerline waypoints.")
 
     def stop_saving_waypoints(self):
         """Stop saving waypoints to file."""
         if self.is_saving_wp:
-            if self.wp_file:
-                self.wp_file.close()
-                self.wp_file = None
-            if self.centerline_file:
-                self.centerline_file.close()
-                self.centerline_file = None
+            if len(self.waypoint_buffer) > 4:
+                self.save_splined_waypoints(self.wp_filepath, self.waypoint_buffer)
+            else:
+                self.save_raw_waypoints(self.wp_filepath, self.waypoint_buffer)
+
+            if len(self.centerline_buffer) > 4:
+                self.save_splined_waypoints(self.centerline_filepath, self.centerline_buffer)
+            else:
+                self.save_raw_waypoints(self.centerline_filepath, self.centerline_buffer)
+
             self.is_saving_wp = False
             self.get_logger().info("Stopped saving waypoints.")
+
+    def save_splined_waypoints(self, filepath, buffer, ds=0.1):
+        """Save waypoints to file with spline interpolation."""
+
+        buffer = np.array(buffer)
+        x = buffer[:, 0]
+        y = buffer[:, 1]
+
+        dists = np.cumsum(np.sqrt(np.diff(x, prepend=x[0])**2 + np.diff(y, prepend=y[0])**2))
+        dists[0] = 0.0  # Ensure the first distance is zero
+
+        spline_x = CubicSpline(dists, x)
+        spline_y = CubicSpline(dists, y)
+        
+        s_new = np.arange(0, dists[-1], ds)
+        x_new = spline_x(s_new)
+        y_new = spline_y(s_new)
+
+        with open(filepath, 'w') as f:
+            for x_val, y_val in zip(x_new, y_new):
+                f.write(f"{x_val}, {y_val}\n")
+
+    def save_raw_waypoints(self, filepath, buffer):
+        """Save raw waypoints to file."""
+        with open(filepath, 'w') as f:
+            for x, y in buffer:
+                f.write(f"{x}, {y}\n")
 
     def calculate_centerline_point(self, scan_msg):
 
