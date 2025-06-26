@@ -153,19 +153,31 @@ class WaypointLoggerNode(Node):
         x = buffer[:, 0]
         y = buffer[:, 1]
 
+        coords = np.column_stack((x, y))
+
+        diffs = np.linalg.norm(np.diff(coords, axis=0), axis=1)
+
+        keep = np.insert(diffs > 1e-6, 0, True)
+        x = x[keep]
+        y = y[keep]
+
         dists = np.cumsum(np.sqrt(np.diff(x, prepend=x[0])**2 + np.diff(y, prepend=y[0])**2))
         dists[0] = 0.0  # Ensure the first distance is zero
 
-        spline_x = CubicSpline(dists, x)
-        spline_y = CubicSpline(dists, y)
-        
-        s_new = np.arange(0, dists[-1], ds)
-        x_new = spline_x(s_new)
-        y_new = spline_y(s_new)
+        if len(x) > 3:
 
-        with open(filepath, 'w') as f:
-            for x_val, y_val in zip(x_new, y_new):
-                f.write(f"{x_val}, {y_val}\n")
+            spline_x = CubicSpline(dists, x)
+            spline_y = CubicSpline(dists, y)
+            
+            s_new = np.arange(0, dists[-1], ds)
+            x_new = spline_x(s_new)
+            y_new = spline_y(s_new)
+
+            with open(filepath, 'w') as f:
+                for x_val, y_val in zip(x_new, y_new):
+                    f.write(f"{x_val}, {y_val}\n")
+        else:
+            self.save_raw_waypoints(filepath, zip(x, y))
 
     def save_raw_waypoints(self, filepath, buffer):
         """Save raw waypoints to file."""
