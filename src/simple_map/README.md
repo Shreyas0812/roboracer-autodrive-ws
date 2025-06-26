@@ -47,6 +47,29 @@ To Save Waypoints along with CenterLine Waypoints without map:
 roboracer-ws$ ros2 launch simple_map simple_map.launch.py launch_simple_map:=false
 ```
 
+This starts saving waypoints when the lap changes, and stops changing when the lap changes again. 
+
+To reset the variable and save again at any point: (Note: if you change the name of the service, this command changes too)
+```bash
+ros2 service call /reset_waypoint_logging std_srvs/srv/Empty
+```
+
+For Real Roboracer Car:
+
+To start saving waypoints
+```bash
+ros2 topic pub /autodrive/f1tenth_1/lap_count std_msgs/msg/Int32 "data: 1"
+```
+followed by:
+```bash
+ros2 topic pub /autodrive/f1tenth_1/lap_count std_msgs/msg/Int32 "data: 2"
+```
+
+To stop saving waypoints
+```bash
+ros2 topic pub /autodrive/f1tenth_1/lap_count std_msgs/msg/Int32 "data: 3"
+```
+
 To Visualize the saved waypoints: 
 ```bash
 roboracer-ws$ ros2 launch simple_map visualise.launch.py 
