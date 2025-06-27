@@ -11,6 +11,7 @@ This package provides simple mapping and waypoint logging functionality for the 
   - [Simple Saving](#simple-saving)
   - [Centerline Waypoints](#centerline-waypoints)
   - [Resetting Waypoint Logging](#resetting-waypoint-logging)
+  - [Saving a Copy of Waypoints](#saving-a-copy-of-waypoints)
   - [For Real Roboracer Car](#for-real-roboracer-car)
 - [Visualization](#visualization)
 - [Notes](#notes)
@@ -25,12 +26,12 @@ ros2 pkg create simple_map --build-type ament_cmake --license MIT
 
 ## File Structure
 
-Create a file structure matching the commit `85bcaa79f7b9e2851947586b3796900bd0503bd8`.
+Ensure your file structure matches the [reference commit](https://github.com/Shreyas0812/roboracer-autodrive-ws/commit/85bcaa79f7b9e2851947586b3796900bd0503bd8).
 
-Update `CMakeLists.txt` and `package.xml` accordingly.
-
-- `utils.py` contains helper functions.
+- `utils.py`: Helper functions.
 - Main mapping and map generation logic is in `simple_map.launch.py`.
+- Configuration files are in `config/`.
+- Python nodes are in `scripts/`.
 
 ## Building the Package
 
@@ -42,6 +43,11 @@ colcon build
 source install/setup.bash
 ```
 
+location: `roboracer-ws`
+> **Tip:** If you restructure packages or interfaces, clean the workspace first:
+> ```
+> rm -rf build/ install/ log/
+> ```
 
 ## Mapping
 
@@ -87,7 +93,6 @@ location: `roboracer-ws`
 ros2 launch simple_map simple_map.launch.py launch_simple_map:=false
 ```
 
-
 - Waypoint logging starts when the lap count changes and stops when it changes again.
 
 ### Resetting Waypoint Logging
@@ -99,8 +104,21 @@ location: `roboracer-ws`
 ros2 service call /reset_waypoint_logging std_srvs/srv/Empty
 ```
 
+### Saving a copy of waypoints
 
-*(If you change the service name, update the command accordingly.)*
+> **Note:** Change the destination paths below as needed.
+
+**To save waypoints to a location of users choice**
+
+location: `roboracer-ws`
+```bash
+ros2 service call /save_waypoints roboracer_interfaces/srv/SaveWaypoints "{source_filename: 'waypoints.csv', destination_filepath: '/home/shreyas/Documents/waypoints.csv'}"
+
+ros2 service call /save_waypoints roboracer_interfaces/srv/SaveWaypoints "{source_filename: 'centerline_waypoints.csv', destination_filepath: '/home/shreyas/Documents/centerline_waypoints.csv'}"
+```
+
+- The `/save_waypoints` service is provided by the `waypoint_saver_service.py` node in `simple_map`.
+- Make sure this node is running before calling the service.
 
 ### For Real Roboracer Car
 
@@ -130,12 +148,19 @@ ros2 launch simple_map visualise.launch.py
 ```
 
 
-- Topics published:
+- Visualization topics:
   - `/visualization/waypoints`
   - `/visualization/centerline_waypoints`
+- Use RViz2 to visualize these topics. You can add them as `MarkerArray` displays in RViz.
 
 ## Notes
 
-- Files inside the `config` folder are placeholders.
-- The actual saved waypoint files will be inside the `include` folder after building with `colcon build`.
-- Saved waypoints will **not** be in the `config` folder.
+- Files in the `config` folder are placeholders for initial configuration.
+- **Saved waypoints** (CSV files) are written to the location you specify when calling the `/save_waypoints` service.
+- Saved waypoints will **not** appear in the `config` folder unless you explicitly save them there.
+- The service node (`waypoint_saver_service.py`) must be running for `/save_waypoints` to work.
+- If you change the service name or node, update the commands above accordingly.
+- If you do not save the waypoints to another location, rebuilding the workspace will overwrite previous waypoint files. For example, if you build again before visualization, it will re-write the waypoints.
+
+
+**For troubleshooting and more details, see the code comments and launch files.**
