@@ -47,6 +47,7 @@ install(PROGRAMS
   scripts/simple_map_node.py
   scripts/waypoint_logger_node.py
   scripts/visualise_node.py
+  scripts/waypoint_saver_service.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

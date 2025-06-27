@@ -24,5 +24,13 @@ def generate_launch_description():
        output='screen'
     )
     ld.add_action(visualise_node)
-    
+
+    waypoint_saver_service = Node(
+        package='simple_map',
+        executable='waypoint_saver_service.py',
+        name='waypoint_saver_service',
+        output='screen'
+    )
+    ld.add_action(waypoint_saver_service)
+
     return ld

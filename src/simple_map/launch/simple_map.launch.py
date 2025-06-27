@@ -53,7 +53,16 @@ def generate_launch_description():
     )
     ld.add_action(waypoint_logger_node)
 
- 
+    # Launch the waypoint saver service node conditionally
+    waypoint_saver_service = Node(
+        package='simple_map',
+        executable='waypoint_saver_service.py',
+        name='waypoint_saver_service',
+        output='screen',
+        condition=IfCondition(LaunchConfiguration('launch_waypoint_logger'))
+    )
+    ld.add_action(waypoint_saver_service)
+
     return ld
 
     # return LaunchDescription([
