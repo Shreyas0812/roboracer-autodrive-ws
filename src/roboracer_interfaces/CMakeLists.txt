@@ -16,6 +16,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/CarControlWallFollow.msg"
   "msg/CarControlGapFollow.msg"
   "msg/CarControlPurePursuit.msg"
+  "srv/SaveWaypoints.srv"
 )
 
 ament_export_dependencies(rosidl_default_runtime)
