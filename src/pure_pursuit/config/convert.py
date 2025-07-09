@@ -2,7 +2,7 @@ import os
 import pandas as pd
 
 # Define file paths
-input_path = os.path.join('backup_waypoints', 'traj_race_cl_mincurv.csv')
+input_path = os.path.join('backup_waypoints', 'traj_race_cl_mintime.csv')
 output_path = os.path.join('config', 'waypoints.csv')
 
 # Read the CSV file, skipping comment lines and using ';' as the separator
