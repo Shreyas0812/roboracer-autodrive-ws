@@ -1,8 +1,8 @@
 {
     "throttle": "0.15",
-    "kp": "1",
-    "kv": "0.5",
+    "kp": "1.5",
+    "kv": "1.1",
     "lookahead_distance": "1.2",
     "flag_reason": "Latest",
-    "flag_msg": "Let's try only a gradual increase of speed"
+    "flag_msg": ""
 }
